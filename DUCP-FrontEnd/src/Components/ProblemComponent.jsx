@@ -1,7 +1,7 @@
 import React from 'react';
 import { AiOutlineCheck, AiOutlineClose, AiOutlineMinus } from 'react-icons/ai';
 
-const ProblemPage = ({ pdfPath, timestamps }) => {
+const ProblemComponent = ({ pdfPath, timestamps }) => {
   return (
     <div className="flex h-screen">
       {/* Left Side: PDF Viewer */}
@@ -43,4 +43,4 @@ const ProblemPage = ({ pdfPath, timestamps }) => {
   );
 };
 
-export default ProblemPage;
+export default ProblemComponent;

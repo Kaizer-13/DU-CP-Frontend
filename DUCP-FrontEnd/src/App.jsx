@@ -14,7 +14,8 @@ import {
 import SignIn from './Pages/signin';
 import Dashboard from './Pages/Dashboard';
 import Leaderboard from './Pages/Leaderboard';
-import ProblemPage from './Components/ProblemPage';
+import ContestPage from './Pages/ContestPage';
+import ProblemComponent from './Components/ProblemComponent';
 
 function App() {
   const timestamps = [
@@ -46,8 +47,9 @@ function App() {
         />
 
 
-        <Route path="/pdf-viewer" element={<ProblemPage pdfPath="/public/sample.pdf" timestamps={timestamps} />} />
+        <Route path="/pdf-viewer" element={<ProblemComponent pdfPath="/public/sample.pdf" timestamps={timestamps} />} />
 
+        <Route path="/problem" element={<ContestPage/>}/>
 
       </Routes>
     </Router>
