@@ -14,8 +14,14 @@ import {
 import SignIn from './Pages/signin';
 import Dashboard from './Pages/Dashboard';
 import Leaderboard from './Pages/Leaderboard';
+import ProblemPage from './Components/ProblemPage';
 
 function App() {
+  const timestamps = [
+    { time: '10:00 AM', status: 'check' },
+    { time: '10:30 AM', status: 'close' },
+    { time: '11:00 AM', status: 'minus' },
+  ];
   return (
     <>
 
@@ -39,7 +45,10 @@ function App() {
         element={<Leaderboard/>}
         />
 
-      
+
+        <Route path="/pdf-viewer" element={<ProblemPage pdfPath="/public/sample.pdf" timestamps={timestamps} />} />
+
+
       </Routes>
     </Router>
   </>
