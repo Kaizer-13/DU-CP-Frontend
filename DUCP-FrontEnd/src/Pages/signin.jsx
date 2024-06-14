@@ -8,9 +8,8 @@ function Signin() {
   const navigate = useNavigate();
   
   function handleSignIn() {
-      // Here you would typically validate the user's credentials
-      // If validation is successful, navigate to the Dashboard
-    navigate('/dashboard');
+
+    navigate('/dashboard');s
   }
     
   return (

@@ -14,6 +14,7 @@ import {
 import SignIn from './Pages/signin';
 import Dashboard from './Pages/Dashboard';
 import Leaderboard from './Pages/Leaderboard';
+import Contests from './Pages/Contests';
 
 function App() {
   return (
@@ -35,8 +36,14 @@ function App() {
         />
 
         <Route
-        path="/leaderboard"
-        element={<Leaderboard/>}
+          path="/leaderboard"
+          element={<Leaderboard/>}
+        />
+
+        <Route
+            path="/contests" 
+            element={<Contests/>} 
+
         />
 
       

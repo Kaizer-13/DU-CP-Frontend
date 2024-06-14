@@ -33,7 +33,7 @@ function Navbar(){
                 <div className="ml-6 space-x-4">  {/* Adds some margin left after the DUCU text */}
                     <Link to ="/dashboard" className="text-gray-300 hover:text-white">Home</Link>
                     <Link to="/leaderboard" className="text-gray-300 hover:text-white">Leaderboard</Link>
-                    <a href="#contest" className="text-gray-300 hover:text-white">Contest</a>
+                    <Link to="/contests" className="text-gray-300 hover:text-white">Contest</Link>
                     <a href="#practice" className="text-gray-300 hover:text-white">Practice</a>
                     <a href="#contact" className="text-gray-300 hover:text-white">Contact</a>
                 </div>
