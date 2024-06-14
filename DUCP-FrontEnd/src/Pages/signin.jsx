@@ -59,7 +59,7 @@ function Signin() {
             
           </div>
           <p className="text-center text-gray-500 text-m" style={{marginTop:'30px'}}>
-            New to DUCU? <a href="#" className="text-dark-blue hover:text-black">Register here</a>
+            New to DUCU? <a href="/signup" className="text-dark-blue hover:text-black">Register here</a>
           </p>
         </form>
       </div>

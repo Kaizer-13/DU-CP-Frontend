@@ -15,6 +15,8 @@ import SignIn from './Pages/signin';
 import Dashboard from './Pages/Dashboard';
 import Leaderboard from './Pages/Leaderboard';
 import Contests from './Pages/Contests';
+import SignUp from './Pages/SignUp';
+// import Profile from './Pages/Profile';
 
 function App() {
   return (
@@ -45,6 +47,17 @@ function App() {
             element={<Contests/>} 
 
         />
+
+        
+        <Route 
+        path="/signup"
+         element={<SignUp />} 
+         />
+
+         {/* <Route
+          path="/profile" 
+          element={<Profile />} 
+          /> */}
 
       
       </Routes>
