@@ -18,14 +18,14 @@ const ProblemTable = ({ problems, onProblemClick }) => {
           {problems.map((problem) => (
             <tr key={problem.id}>
               <td className="border border-gray-200 py-2 px-4 text-center">
-              <Link
+              {problem.number}
+              </td>
+              <td className="border border-gray-200 py-2 px-4 text-center"><Link
               to={`/contests/${contestId}/problem/${problem.id}`}
               className="text-blue-500 hover:underline"
               onClick={() => onProblemClick(problem.id)}
-            > {problem.number}
-            </Link>
-              </td>
-              <td className="border border-gray-200 py-2 px-4 text-center">{problem.name}</td>
+            > {problem.name}
+            </Link></td>
               <td className="border border-gray-200 py-2 px-4 text-center">{problem.solves}</td>
             </tr>
           ))}
