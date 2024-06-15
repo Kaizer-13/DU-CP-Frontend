@@ -1,24 +1,42 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import Navbar from '../Components/Navbar';
 import Table from '../Components/Table';
-
 import { Link } from 'react-router-dom';
 
-
 const contestColumns = [
-  { Header: 'Contest ID', accessor: 'contestid' },
-  { Header: 'Title', accessor: 'title' },
-  { Header: 'Begin Time', accessor: 'BeginTime' },
+  { Header: 'Contest ID', accessor: 'id' },
+  { Header: 'Title', accessor: 'contest_name' },
+  { Header: 'Begin Time', accessor: 'start_time' },
   { Header: 'Duration', accessor: 'duration' },
 ];
 
-const contestData = [
-  { contestid: 1, title: 'Evaluation', BeginTime: '2023-06-01 10:00', duration: '5h' },
-  { contestid: 2, title: 'Lab exam', BeginTime: '2023-09-15 14:00', duration: '4h' },
-  { contestid: 3, title: '26 er hogamara', BeginTime: '2023-12-10 09:00', duration: '5h' },
-];
-
 function Contests() {
+  const [contestData, setContestData] = useState([]);
+
+  useEffect(() => {
+    const fetchContests = async () => {
+      try {
+        const token = localStorage.getItem('access_token');
+        if (!token) {
+          throw new Error('No access token found');
+        }
+
+        const response = await axios.get('http://103.209.199.186:5000/contestant/contests', {
+          headers: {
+            'accept': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        setContestData(response.data.contests);
+      } catch (error) {
+        console.error('Error fetching contest data:', error);
+      }
+    };
+
+    fetchContests();
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
       <Navbar />
