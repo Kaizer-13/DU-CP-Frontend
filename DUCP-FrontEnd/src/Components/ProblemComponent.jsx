@@ -27,7 +27,7 @@ const ProblemComponent = ({ problemId, timestamps }) => {
         // Convert ArrayBuffer to base64 string
         const base64Pdf = arrayBufferToBase64(response.data);
         const pdfDataUri = `data:application/pdf;base64,${base64Pdf}`;
-        console.log('PDF Data URI:', pdfDataUri);
+        // console.log('PDF Data URI:', pdfDataUri);
         setPdfContent(pdfDataUri);
       } catch (error) {
         console.error('Error fetching problem data:', error);
@@ -50,7 +50,7 @@ const ProblemComponent = ({ problemId, timestamps }) => {
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
   };
-
+//  console.log(timestamps)
   const handleSubmit = async () => {
     try {
       const token = localStorage.getItem('access_token');
@@ -103,9 +103,9 @@ const ProblemComponent = ({ problemId, timestamps }) => {
           {timestamps.map((item, index) => (
             <li key={index} className="flex items-center mb-2">
               <span className="mr-2">{item.time}</span>
-              {item.status === 'check' && <AiOutlineCheck className="text-green-500" />}
-              {item.status === 'close' && <AiOutlineClose className="text-red-500" />}
-              {item.status === 'minus' && <AiOutlineMinus className="text-gray-500" />}
+              {item.status === 'Accepted' && <AiOutlineCheck className="text-green-500" />}
+              {item.status === 'Wrong Answer' && <AiOutlineClose className="text-red-500" />}
+              {item.status === 'waiting' && <AiOutlineMinus className="text-gray-500" />}
             </li>
           ))}
         </ul>

@@ -40,13 +40,13 @@ const StandingsTable = ({ problems, standingsData }) => {
                     </td>
                     {standing.problems.map((status, index) => (
                       <td key={index} className="whitespace-nowrap px-3 py-5 text-sm text-gray-500 text-center">
-                        {status === 'accepted' && (
+                        {status === 'Accepted' && (
                           <span className="bg-green-50 text-green-700 py-1 px-2 rounded-md ring-1 ring-green-600/20">Accepted</span>
                         )}
-                        {status === 'wrong' && (
+                        {status === 'Wrong Answer' && (
                           <span className="bg-red-50 text-red-700 py-1 px-2 rounded-md ring-1 ring-red-600/20">Wrong Answer</span>
                         )}
-                        {status === 'N/A' && (
+                        {status === 'None' && (
                           <span className="bg-gray-50 text-gray-700 py-1 px-2 rounded-md ring-1 ring-gray-600/20">N/A</span>
                         )}
                       </td>
