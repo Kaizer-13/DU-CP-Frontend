@@ -2,6 +2,9 @@ import React from 'react';
 import Navbar from '../Components/Navbar';
 import Table from '../Components/Table';
 
+import { Link } from 'react-router-dom';
+
+
 const contestColumns = [
   { Header: 'Contest ID', accessor: 'contestid' },
   { Header: 'Title', accessor: 'title' },
@@ -21,9 +24,9 @@ function Contests() {
       <Navbar />
       <div className="flex flex-col p-4 mr-12 ml-12 space-y-4">
         <div className="flex justify-end space-x-8">
-          <a href="#create-contest" className="underline text-gray-500 hover:text-dark-blue font-bold">
+          <Link to="/createContests" className="underline text-gray-500 hover:text-dark-blue font-bold">
             Create a Contest
-          </a>
+          </Link>
           <a href="#codeforces-rating" className="underline text-gray-500 hover:text-dark-blue font-bold">
             Codeforces Rating
           </a>

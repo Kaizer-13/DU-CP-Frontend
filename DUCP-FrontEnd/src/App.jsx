@@ -15,6 +15,7 @@ import SignIn from './Pages/signin';
 import Dashboard from './Pages/Dashboard';
 import Leaderboard from './Pages/Leaderboard';
 import Contests from './Pages/Contests';
+import CreateContests from './Pages/CreateContests';
 
 function App() {
   return (
@@ -43,6 +44,12 @@ function App() {
         <Route
             path="/contests" 
             element={<Contests/>} 
+
+        />
+
+        <Route
+            path="/createContests" 
+            element={<CreateContests/>} 
 
         />
 
