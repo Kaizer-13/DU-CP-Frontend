@@ -4,9 +4,10 @@ import Navbar from '../Components/Navbar';
 import Table from '../Components/Table';
 import { Link } from 'react-router-dom';
 
+
 const contestColumns = [
   { Header: 'Contest ID', accessor: 'id' },
-  { Header: 'Title', accessor: 'contest_name' },
+  { Header: 'Title', accessor: 'name' },
   { Header: 'Begin Time', accessor: 'start_time' },
   { Header: 'Duration', accessor: 'duration' },
 ];
@@ -36,7 +37,6 @@ function Contests() {
 
     fetchContests();
   }, []);
-
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
       <Navbar />
@@ -53,7 +53,14 @@ function Contests() {
           title="Contests"
           subtitle="Contests held in recent months"
           columns={contestColumns}
-          data={contestData}
+          data={contestData.map(contest => ({
+            ...contest,
+            name: (
+              <Link to={`/contests/${contest.id}`} className="text-blue-500 hover:underline">
+                {contest.contest_name}
+              </Link>
+            )
+          }))}
         />
       </div>
     </div>

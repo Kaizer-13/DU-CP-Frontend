@@ -25,6 +25,10 @@ const ContestTabs = ({ contestData }) => {
     name: problem.problem_name,
     solves: 0, // This should be updated based on actual solve data
   }));
+  const handleProblemClick = (problemId) => {
+    setActiveTab('problem');
+    setSelectedProblemId(problemId);
+  };
 
   const standingsData = [
     { rank: 1, username: 'john_doe', realName: 'John Doe', solves: 5, tries: 10, problems: ['accepted', 'accepted', 'wrong'] },
@@ -64,7 +68,7 @@ const ContestTabs = ({ contestData }) => {
             <p>Duration: {contestData.contest_duration}</p>
             <p>Start Time: {new Date(contestData.contest_start_time).toLocaleString()}</p>
             <p>End Time: {new Date(contestData.contest_end_time).toLocaleString()}</p>
-            <ProblemTable problems={problems} />
+            <ProblemTable problems={problems} onProblemClick={handleProblemClick} />
             <div className="mt-4 flex justify-center">
               <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
                 Check Plagiarism

@@ -1,7 +1,7 @@
-import React from 'react';
+import PropTypes from 'prop-types';
 import { Link, useParams } from 'react-router-dom';
 
-const ProblemTable = ({ problems }) => {
+const ProblemTable = ({ problems, onProblemClick }) => {
   const { contestId } = useParams();
 
   return (
@@ -18,9 +18,12 @@ const ProblemTable = ({ problems }) => {
           {problems.map((problem) => (
             <tr key={problem.id}>
               <td className="border border-gray-200 py-2 px-4 text-center">
-                <Link to={`/contests/${contestId}/problem/${problem.id}`} className="text-blue-500 hover:underline">
-                  {problem.number}
-                </Link>
+              <Link
+              to={`/contests/${contestId}/problem/${problem.id}`}
+              className="text-blue-500 hover:underline"
+              onClick={() => onProblemClick(problem.id)}
+            > {problem.number}
+            </Link>
               </td>
               <td className="border border-gray-200 py-2 px-4 text-center">{problem.name}</td>
               <td className="border border-gray-200 py-2 px-4 text-center">{problem.solves}</td>
@@ -30,6 +33,11 @@ const ProblemTable = ({ problems }) => {
       </table>
     </div>
   );
+};
+
+ProblemTable.propTypes = {
+  problems: PropTypes.array.isRequired,
+  onProblemClick: PropTypes.func.isRequired,
 };
 
 export default ProblemTable;
