@@ -1,4 +1,3 @@
-
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -7,7 +6,6 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate,
 } from "react-router-dom";
 
 
@@ -15,7 +13,8 @@ import SignIn from './Pages/signin';
 import Dashboard from './Pages/Dashboard';
 import Leaderboard from './Pages/Leaderboard';
 import Contests from './Pages/Contests';
-import SignUp from './Pages/SignUp'
+import SignUp from './Pages/SignUp';
+import ContestPage from './Pages/ContestPage';
 
 function App() {
   return (
@@ -53,8 +52,8 @@ function App() {
             element={<Contests/>} 
 
         />
-
-      
+      <Route path="/contests/:contestId" element={<ContestPage/>}/>
+      <Route path="/contests/:contestId/problem/:problemId" element={<ContestPage/>} />
       </Routes>
     </Router>
   </>
