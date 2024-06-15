@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../Resources/csedu.png';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 function Signin() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordVisible, setPasswordVisible] = useState(false); // Password visibility state
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false); // Loading state
   const navigate = useNavigate();
@@ -13,41 +16,35 @@ function Signin() {
     e.preventDefault();
     setIsLoading(true); // Start loading
 
-   
+    const requestBody = {
+      'grant_type': '',
+      'username': username,
+      'password': password,
+      'scope': '',
+      'client_id': '',
+      'client_secret': ''
+    };
 
     try {
-      const response = await fetch('http://103.209.199.186:5000/token', {
-        method: 'POST',
+      const response = await axios.post('http://103.209.199.186:5000/token', requestBody, {
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: new URLSearchParams({
-          'grant_type': '',
-          'username': username,
-          'password': password,
-          'scope': '',
-          'client_id': '',
-          'client_secret': ''
-        })
+        }
       });
-  
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Error data from server:', errorData);
-        throw new Error('Invalid username or password');
-      }
-
-      const data = await response.json();
+      const data = response.data;
       console.log('Successful response data:', data);
 
       // Handle the response data here, such as storing the tokens
       localStorage.setItem('access_token', data.access_token);
       localStorage.setItem('refresh_token', data.refresh_token);
 
+      console.log(response.status);
       // Navigate to the dashboard
-      navigate('/dashboard');
+      if (response.status === 200 && data.access_token!=null) {
+        navigate('/dashboard');
+      }
     } catch (error) {
       console.error('Error during sign in:', error);
       setErrorMessage(error.message);
@@ -122,14 +119,23 @@ function Signin() {
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
               Password
             </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-              id="password"
-              type="password"
-              placeholder="********"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <div className="relative">
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                id="password"
+                type={passwordVisible ? 'text' : 'password'}
+                placeholder="********"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 px-3 py-2"
+                onClick={() => setPasswordVisible(!passwordVisible)}
+              >
+                {passwordVisible ? 'Hide' : 'Show'}
+              </button>
+            </div>
             <div className="text-right mb-0">
               <a href="#" className="inline-block align-baseline text-sm text-neutral-500 hover:text-dark-blue underline mt-2 text-right">
                 Forgot Password?
@@ -145,8 +151,8 @@ function Signin() {
               Sign In
             </button>
           </div>
-          <p className="text-center text-gray-500 text-m" style={{ marginTop: '30px' }}>
-            New to DUCU? <a href="#" className="text-dark-blue hover:text-black">Register here</a>
+          <p className="text-center text-gray-500 text-m" style={{marginTop:'30px'}}>
+            New to DUCU? <Link to="/signup" className="text-dark-blue hover:text-black">Register here</Link>
           </p>
         </form>
       </div>
