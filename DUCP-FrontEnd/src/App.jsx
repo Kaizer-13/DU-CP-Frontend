@@ -15,9 +15,15 @@ import Leaderboard from './Pages/Leaderboard';
 import Contests from './Pages/Contests';
 import SignUp from './Pages/SignUp';
 import ContestPage from './Pages/ContestPage';
+<<<<<<< HEAD
 import Profile from './Pages/Profile';
 import EditProfile from './Pages/EditProfile'
 
+=======
+import Practice from './Pages/Practice';
+import ProblemPage from './Pages/ProblemPage';
+import PostPage from './Pages/PostPage';
+>>>>>>> 30409b3e2a6559acde00b9516f08d7f02d761f40
 
 function App() {
   return (
@@ -57,6 +63,7 @@ function App() {
         />
       <Route path="/contests/:contestId" element={<ContestPage/>}/>
       <Route path="/contests/:contestId/problem/:problemId" element={<ContestPage/>} />
+<<<<<<< HEAD
       <Route
             path="/profile" 
             element={<Profile/>} 
@@ -64,6 +71,11 @@ function App() {
         />
          <Route path="/edit-profile" element={<EditProfile />} />
       
+=======
+      <Route path="/practice" element={<Practice/>}/>
+      <Route path="/problem/:problemId" element={<ProblemPage/>} />
+      <Route path="/posts/:id" element={<PostPage/>} />
+>>>>>>> 30409b3e2a6559acde00b9516f08d7f02d761f40
       </Routes>
     </Router>
   </>
