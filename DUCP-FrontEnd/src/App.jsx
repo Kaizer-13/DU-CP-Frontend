@@ -15,6 +15,8 @@ import Leaderboard from './Pages/Leaderboard';
 import Contests from './Pages/Contests';
 import SignUp from './Pages/SignUp';
 import ContestPage from './Pages/ContestPage';
+import Practice from './Pages/Practice';
+import ProblemPage from './Pages/ProblemPage';
 
 function App() {
   return (
@@ -54,6 +56,8 @@ function App() {
         />
       <Route path="/contests/:contestId" element={<ContestPage/>}/>
       <Route path="/contests/:contestId/problem/:problemId" element={<ContestPage/>} />
+      <Route path="/practice" element={<Practice/>}/>
+      <Route path="/problem/:problemId" element={<ProblemPage/>} />
       </Routes>
     </Router>
   </>
