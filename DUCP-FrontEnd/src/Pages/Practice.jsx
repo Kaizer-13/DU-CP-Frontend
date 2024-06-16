@@ -12,6 +12,7 @@ const problemColumns = [
 
 function Practice() {
   const [problemData, setProblemData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchProblems = async () => {
@@ -33,27 +34,43 @@ function Practice() {
       }
     };
     
-    
     fetchProblems();
   }, []);
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const filteredProblems = problemData.filter(problem =>
+    problem.problem_name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
       <Navbar />
       <div className="flex flex-col p-4 mr-12 ml-12 space-y-4">
-        <div className="flex justify-end space-x-8">
-          <Link to="/contests" className="underline text-gray-500 hover:text-dark-blue font-bold">
-            Contests
-          </Link>
-          <a href="#practice-problems" className="underline text-gray-500 hover:text-dark-blue font-bold">
-            Practice Problems
-          </a>
+        <div className="flex justify-between items-center mb-4">
+          <input
+            type="text"
+            placeholder="Search problems..."
+            value={searchQuery}
+            onChange={handleSearchChange}
+            className="p-2 w-4/5 border border-gray-300 rounded"
+          />
+          <div className="flex space-x-8">
+            <Link to="/contests" className="underline text-gray-500 hover:text-dark-blue font-bold">
+              Contests
+            </Link>
+            <a href="#practice-problems" className="underline text-gray-500 hover:text-dark-blue font-bold">
+              Practice Problems
+            </a>
+          </div>
         </div>
         <Table
           title="Practice Problems"
           subtitle="Practice problems available for you"
           columns={problemColumns}
-          data={problemData.map(problem => ({
+          data={filteredProblems.map(problem => ({
             ...problem,
             name: (
               <Link to={`/problem/${problem.id}`} className="text-blue-500 hover:underline">
