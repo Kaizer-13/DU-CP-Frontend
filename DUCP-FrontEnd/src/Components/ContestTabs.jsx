@@ -8,6 +8,7 @@ import axios from 'axios';
 const ContestTabs = ({ contestData }) => {
   const [activeTab, setActiveTab] = useState('overview');
   const [selectedProblemId, setSelectedProblemId] = useState(null);
+  const [selectedProblemUrl, setSelectedProblemUrl] = useState(null);
   const [timestamps, setTimestamps] = useState([]);
   const [problems, setProblems] = useState([]);
   const [standingsData, setStandingsData] = useState([]);
@@ -17,11 +18,16 @@ const ContestTabs = ({ contestData }) => {
   useEffect(() => {
     if (problemId) {
       setSelectedProblemId(problemId);
+      const problem = contestData.problems.find(p=>p.id===problemId);
+      if (problem) {
+        setSelectedProblemUrl(problem.problem_url);
+      }
     } else if (contestData.problems.length > 0) {
       setSelectedProblemId(contestData.problems[0].id);
+      setSelectedProblemUrl(contestData.problems[0].problem_url);
       navigate(`/contests/${contestId}/problem/${contestData.problems[0].id}`);
     }
-  }, [problemId, contestData.problems, contestId, navigate]);
+  }, [problemId,  contestData.problems, contestId, navigate]);
 
   useEffect(() => {
     const fetchSubmissions = async () => {
@@ -154,6 +160,10 @@ const ContestTabs = ({ contestData }) => {
   const handleProblemClick = (problemId) => {
     setActiveTab('problem');
     setSelectedProblemId(problemId);
+    const problem = contestData.problems.find(p=>p.id===problemId);
+      if (problem) {
+        setSelectedProblemUrl(problem.problem_url);
+      }
   };
 
   return (
@@ -198,7 +208,7 @@ const ContestTabs = ({ contestData }) => {
         {activeTab === 'problem' && (
           <div>
             {selectedProblemId && (
-              <ProblemComponent problemId={selectedProblemId} timestamps={timestamps} />
+              <ProblemComponent problemId={selectedProblemId} problemUrl={selectedProblemUrl} timestamps={timestamps} />
             )}
           </div>
         )}

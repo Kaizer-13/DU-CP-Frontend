@@ -6,9 +6,33 @@ import axios from 'axios';
 
 const ProblemPage = () => {
   const { problemId } = useParams();
+  const [problemUrl, setProblemUrl] = useState('');
   const [timestamps, setTimestamps] = useState([]);
 
   useEffect(() => {
+    const fetchProblem = async () => {
+      try {
+        const token = localStorage.getItem('access_token');
+        if (!token) {
+          throw new Error('No access token found');
+        }
+        const url = `http://103.209.199.186:5000/contestant/problems/`;
+        const response = await axios.get(url, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        const problem = response.data.problems.find(p=>p.id===problemId);
+        if (problem) {
+          setProblemUrl(problem.problem_url);
+        }
+        
+      } catch (error) {
+        console.error('Error fetching problem:', error);
+      }
+    }
+    fetchProblem();
     const fetchSubmissions = async () => {
       try {
         const token = localStorage.getItem('access_token');
@@ -45,7 +69,7 @@ const ProblemPage = () => {
     <div className="min-h-screen bg-gray-100 flex flex-col">
       <Navbar />
       <div className="flex flex-col p-4 mr-12 ml-12 space-y-4">
-        <ProblemComponent problemId={problemId} timestamps={timestamps} />
+        <ProblemComponent problemId={problemId} problemUrl={problemUrl} timestamps={timestamps} />
       </div>
     </div>
   );

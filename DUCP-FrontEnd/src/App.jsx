@@ -17,6 +17,7 @@ import SignUp from './Pages/SignUp';
 import ContestPage from './Pages/ContestPage';
 import Practice from './Pages/Practice';
 import ProblemPage from './Pages/ProblemPage';
+import PostPage from './Pages/PostPage';
 
 function App() {
   return (
@@ -58,6 +59,7 @@ function App() {
       <Route path="/contests/:contestId/problem/:problemId" element={<ContestPage/>} />
       <Route path="/practice" element={<Practice/>}/>
       <Route path="/problem/:problemId" element={<ProblemPage/>} />
+      <Route path="/posts/:id" element={<PostPage/>} />
       </Routes>
     </Router>
   </>
