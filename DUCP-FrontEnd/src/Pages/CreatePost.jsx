@@ -2,10 +2,10 @@ import React,{ useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Navbar from '../Components/Navbar'
 import Announcement from '../Components/Announcements'
-import PostComponent from '../Components/PostComponent';
+import CreatePostComponent from '../Components/CreatePostComponent';
 
 
-function PostPage() {
+function CreatePost({announcement}) {
     const { postId } = useParams();
     console.log(postId);
   return (
@@ -16,7 +16,7 @@ function PostPage() {
       
           <Announcement/>
 
-          <PostComponent postId={postId}/>
+          <CreatePostComponent announcement={announcement}/>
 
       </div>
 
@@ -25,4 +25,4 @@ function PostPage() {
   );
 }
 
-export default PostPage;
+export default CreatePost;

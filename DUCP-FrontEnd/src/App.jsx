@@ -18,6 +18,7 @@ import ContestPage from './Pages/ContestPage';
 import Practice from './Pages/Practice';
 import ProblemPage from './Pages/ProblemPage';
 import PostPage from './Pages/PostPage';
+import CreatePost from './Pages/CreatePost';
 
 function App() {
   return (
@@ -59,7 +60,9 @@ function App() {
       <Route path="/contests/:contestId/problem/:problemId" element={<ContestPage/>} />
       <Route path="/practice" element={<Practice/>}/>
       <Route path="/problem/:problemId" element={<ProblemPage/>} />
-      <Route path="/posts/:id" element={<PostPage/>} />
+      <Route path="/posts/:postId" element={<PostPage/>} />
+      <Route path="/create-post" element={<CreatePost announcement={false}/>} />
+      <Route path="/create-announcement" element={<CreatePost announcement={true}/>} />
       </Routes>
     </Router>
   </>

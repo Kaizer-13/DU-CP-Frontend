@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import profile from '../Resources/default_dp.png';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const PostComponent = ({ postId }) => {
   const [post, setPost] = useState(null);
@@ -8,41 +10,35 @@ const PostComponent = ({ postId }) => {
 
   useEffect(() => {
     const fetchPost = async () => {
-      // Dummy post data
-      const postData = {
-        username: "Sample User",
-        profile: profile,
-        topic: "Sample Topic",
-        details: "This is the main content of the post. It can be quite detailed and lengthy.",
-        timestamp: "12:00 pm, 15 June 2024",
-      };
-      setPost(postData);
+      try {
+        const response = await fetch(`http://103.209.199.186:5000/posts/post/${postId}`);
+        const postData = await response.json();
+        console.log(postData);
+        setPost({
+          username: postData.poster, // Replace with actual user data if available
+          profile: profile,
+          topic: postData.title,
+          details: postData.text,
+          timestamp: new Date(postData.created_at).toLocaleString(),
+        });
+      } catch (error) {
+        console.error('Error fetching post:', error);
+      }
     };
 
-    // Simulate API call for comments data
     const fetchComments = async () => {
-      // Dummy comments data
-      const commentsData = [
-        {
-          username: "Commenter One",
+      try {
+        const response = await fetch(`http://103.209.199.186:5000/posts/post/${postId}/comments`);
+        const commentsData = await response.json();
+        setComments(commentsData.map(comment => ({
+          username: "Commenter", // Replace with actual commenter data if available
           profile: profile,
-          details: "This is a sample comment.",
-          timestamp: "12:15 pm, 15 June 2024",
-        },
-        {
-          username: "Commenter Two",
-          profile: profile,
-          details: "Another sample comment.",
-          timestamp: "12:30 pm, 15 June 2024",
-        },
-        {
-          username: "Commenter Three",
-          profile: profile,
-          details: "Yet another sample comment.",
-          timestamp: "12:45 pm, 15 June 2024",
-        },
-      ];
-      setComments(commentsData);
+          details: comment.text,
+          timestamp: new Date(comment.created_at).toLocaleString(),
+        })));
+      } catch (error) {
+        console.error('Error fetching comments:', error);
+      }
     };
 
     fetchPost();
@@ -53,19 +49,41 @@ const PostComponent = ({ postId }) => {
     setNewComment(e.target.value);
   };
 
-  const handleCommentSubmit = (e) => {
+  const handleCommentSubmit = async (e) => {
     e.preventDefault();
     if (newComment.trim() === '') return;
 
-    const newCommentData = {
-      username: "Current User", // Change this to the current logged-in user's name
-      profile: profile, // Change this to the current logged-in user's profile picture
-      details: newComment,
-      timestamp: new Date().toLocaleString(),
-    };
+    const token = localStorage.getItem('access_token'); // Replace with your actual JWT token
 
-    setComments([...comments, newCommentData]);
-    setNewComment('');
+    try {
+      const response = await fetch(`http://103.209.199.186:5000/posts/post/${postId}/add-comment`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ text: newComment })
+      });
+
+      if (!response.ok) {
+        toast.error('Error submitting comment');
+        throw new Error('Error submitting comment');
+      }
+
+      const newCommentData = await response.json();
+
+      setComments([...comments, {
+        username: "Current User", // Replace with actual current user data if available
+        profile: profile, // Replace with actual current user profile picture if available
+        details: newCommentData.text,
+        timestamp: new Date(newCommentData.created_at).toLocaleString(),
+      }]);
+      toast.success('Comment submitted successfully');
+      setNewComment('');
+    } catch (error) {
+      console.error('Error submitting comment:', error);
+    }
   };
 
   if (!post) {
@@ -74,6 +92,7 @@ const PostComponent = ({ postId }) => {
 
   return (
     <div className="w-2/3 bg-white p-4 overflow-auto">
+       <ToastContainer />
       <div className="bg-gray-100 p-6 rounded-lg shadow mb-6">
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center space-x-4">
