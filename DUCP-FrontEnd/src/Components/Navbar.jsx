@@ -11,9 +11,9 @@ function Navbar(){
         // Function to fetch user data from the server
         const fetchUserData = async () => {
         try {
-            const response = await fetch('/api/user-data'); // API endpoint to fetch user data
-            const userData = await response.json();
-            setUser({ username: userData.username, profilePic: userData.profilePic });
+            // const response = await fetch('/api/user-data'); // API endpoint to fetch user data
+            // const userData = await response.json();
+            // setUser({ username: userData.username, profilePic: userData.profilePic });
         } catch (error) {
             console.error('Failed to fetch user data:', error);
         }

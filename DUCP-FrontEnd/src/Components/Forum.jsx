@@ -51,7 +51,7 @@ function ForumComponent() {
                 <img src={post.profile} alt="User profile" className="h-10 w-10 rounded-full" />
                 <div>
                   <h3 className="font-bold text-lg">{post.username}</h3>
-                  <p className="text-sm text-gray-600">{post.details}</p>
+                  <p className="text-sm text-gray-600">{post.topic}</p>
                 </div>
               </div>
             </div>

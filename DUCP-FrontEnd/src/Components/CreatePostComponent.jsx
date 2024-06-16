@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 const CreatePostComponent = ({ announcement }) => {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
@@ -37,7 +39,7 @@ const CreatePostComponent = ({ announcement }) => {
         method: 'POST',
         headers: {
           'accept': 'application/json',
-          'Authorization': token,
+          'Authorization': `Bearer ${token}`, // Pass the access token in the Authorization header token,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(postData),
@@ -48,6 +50,8 @@ const CreatePostComponent = ({ announcement }) => {
         setBody('');
         setError('');
         toast.success('Post submitted successfully!');
+        
+        navigate('/dashboard');
         // Optionally, you can handle a successful post submission here
       } else {
         const errorData = await response.json();
