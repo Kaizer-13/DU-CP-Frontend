@@ -15,6 +15,9 @@ import Leaderboard from './Pages/Leaderboard';
 import Contests from './Pages/Contests';
 import SignUp from './Pages/SignUp';
 import ContestPage from './Pages/ContestPage';
+import Profile from './Pages/Profile';
+import EditProfile from './Pages/EditProfile'
+
 
 function App() {
   return (
@@ -54,6 +57,13 @@ function App() {
         />
       <Route path="/contests/:contestId" element={<ContestPage/>}/>
       <Route path="/contests/:contestId/problem/:problemId" element={<ContestPage/>} />
+      <Route
+            path="/profile" 
+            element={<Profile/>} 
+
+        />
+         <Route path="/edit-profile" element={<EditProfile />} />
+      
       </Routes>
     </Router>
   </>
