@@ -12,13 +12,14 @@ const ContestTabs = ({ contestData }) => {
   const [timestamps, setTimestamps] = useState([]);
   const [problems, setProblems] = useState([]);
   const [standingsData, setStandingsData] = useState([]);
+  const [plagiarismResults, setPlagiarismResults] = useState(null);
   const navigate = useNavigate();
   const { contestId, problemId } = useParams();
 
   useEffect(() => {
     if (problemId) {
       setSelectedProblemId(problemId);
-      const problem = contestData.problems.find(p=>p.id===problemId);
+      const problem = contestData.problems.find(p => p.id === problemId);
       if (problem) {
         setSelectedProblemUrl(problem.problem_url);
       }
@@ -27,7 +28,7 @@ const ContestTabs = ({ contestData }) => {
       setSelectedProblemUrl(contestData.problems[0].problem_url);
       navigate(`/contests/${contestId}/problem/${contestData.problems[0].id}`);
     }
-  }, [problemId,  contestData.problems, contestId, navigate]);
+  }, [problemId, contestData.problems, contestId, navigate]);
 
   useEffect(() => {
     const fetchSubmissions = async () => {
@@ -37,7 +38,6 @@ const ContestTabs = ({ contestData }) => {
           throw new Error('No access token found');
         }
 
-        // Use the provided endpoint which includes contest_id and problem_id in the URL
         const url = `http://103.209.199.186:5000/contestant/contests/${contestId}/submissions/me/${problemId}`;
         const response = await axios.get(url, {
           headers: {
@@ -47,11 +47,8 @@ const ContestTabs = ({ contestData }) => {
         });
 
         const submissions = response.data;
-        console.log(submissions);
-
-        // Map to the format expected by ProblemComponent
         const mappedSubmissions = submissions.map(submission => ({
-          time: submission.updated_at, // or created_at, depending on which is relevant
+          time: submission.updated_at,
           status: submission.verdict
         }));
 
@@ -72,7 +69,6 @@ const ContestTabs = ({ contestData }) => {
           throw new Error('No access token found');
         }
 
-        // Fetch all submissions for the contest
         const url = `http://103.209.199.186:5000/contestant/contests/${contestId}/submissions`;
         const response = await axios.get(url, {
           headers: {
@@ -83,7 +79,6 @@ const ContestTabs = ({ contestData }) => {
 
         const submissions = response.data;
 
-        // Process submissions to count accepted and total submissions for each problem
         const problemStats = {};
         submissions.forEach(submission => {
           if (!problemStats[submission.problem_id]) {
@@ -95,7 +90,6 @@ const ContestTabs = ({ contestData }) => {
           }
         });
 
-        // Map problems with their respective solve counts
         const updatedProblems = contestData.problems.map((problem, index) => {
           const stats = problemStats[problem.id] || { accepted: 0, total: 0 };
           return {
@@ -123,7 +117,6 @@ const ContestTabs = ({ contestData }) => {
           throw new Error('No access token found');
         }
 
-        // Fetch rank list data
         const url = `http://103.209.199.186:5000/contestant/contests/${contestId}/rank_list`;
         const response = await axios.get(url, {
           headers: {
@@ -134,13 +127,12 @@ const ContestTabs = ({ contestData }) => {
 
         const rankList = response.data;
 
-        // Process rank list data to match the required format
         const updatedStandingsData = rankList.map(entry => ({
           rank: entry.rank,
           username: entry.username,
           realName: `${entry.first_name} ${entry.last_name}`,
           solves: entry.solve_count,
-          tries: 0, // Keeping tries as 0 for now
+          tries: 0,
           problems: Object.values(entry.status).map(status => {
             if (status === 1) return 'Accepted';
             if (status === -1) return 'Wrong Answer';
@@ -160,10 +152,24 @@ const ContestTabs = ({ contestData }) => {
   const handleProblemClick = (problemId) => {
     setActiveTab('problem');
     setSelectedProblemId(problemId);
-    const problem = contestData.problems.find(p=>p.id===problemId);
-      if (problem) {
-        setSelectedProblemUrl(problem.problem_url);
-      }
+    const problem = contestData.problems.find(p => p.id === problemId);
+    if (problem) {
+      setSelectedProblemUrl(problem.problem_url);
+    }
+  };
+
+  const handlePlagiarismCheck = async () => {
+    try {
+      const response = await axios.get(`http://103.209.199.186:5000/admin/plagarism-check/${contestId}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      setPlagiarismResults(response.data);
+    } catch (error) {
+      console.error('Error fetching plagiarism check:', error);
+    }
   };
 
   return (
@@ -199,10 +205,39 @@ const ContestTabs = ({ contestData }) => {
             <p>End Time: {new Date(contestData.contest_end_time).toLocaleString()}</p>
             <ProblemTable problems={problems} onProblemClick={handleProblemClick} />
             <div className="mt-4 flex justify-center">
-              <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
+              <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600" onClick={handlePlagiarismCheck}>
                 Check Plagiarism
               </button>
             </div>
+            {plagiarismResults && (
+              <div className="mt-4">
+                <h3 className="text-lg font-semibold">Plagiarism Results</h3>
+                <table className="min-w-full bg-white">
+                  <thead>
+                    <tr>
+                      <th className="py-2 px-4 border-b">Problem ID</th>
+                      <th className="py-2 px-4 border-b">Link</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Object.entries(plagiarismResults).map(([problemId, link]) => (
+                      <tr key={problemId}>
+                        <td className="py-2 px-4 border-b">{problemId}</td>
+                        <td className="py-2 px-4 border-b">
+                          {link.startsWith('http') ? (
+                            <a href={link} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                              View Results
+                            </a>
+                          ) : (
+                            link
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         )}
         {activeTab === 'problem' && (
