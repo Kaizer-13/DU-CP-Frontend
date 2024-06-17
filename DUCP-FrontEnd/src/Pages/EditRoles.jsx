@@ -2,47 +2,38 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../Components/Navbar';
 
-const EditProfile = () => {
-  const [profileData, setProfileData] = useState(null);
+const EditRole = () => {
+  const [roleData, setRoleData] = useState([]);
   const [editField, setEditField] = useState(null);
   const [editValue, setEditValue] = useState('');
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("EditProfile component mounted");
     // Simulate an API call
-    const fetchProfileData = () => {
-      const mockData = {
-        username: 'Kaizer01',
-        first_name: 'Yeamin',
-        last_name: 'Kaiser',
-        codeforces_id: '_Kaizer_',
-        vjudge_id: '_Kaizer_',
-        atcoder_id: '_Kaizer_',
-        codechef_id: '_Kaizer_',
-      };
-      
-      setProfileData(mockData);
+    const fetchRoleData = () => {
+      const mockData = [
+        { username: 'Bithi01', role: 'Admin' },
+        { username: 'Kaizer01', role: 'User' },
+        { username: 'Tasnim', role: 'Moderator' },
+        { username: 'Sinha', role: 'User' },
+        { username: 'Bhola', role: 'User' },
+      ];
+
+      setRoleData(mockData);
     };
 
-    fetchProfileData();
+    fetchRoleData();
   }, []);
 
-  if (!profileData) {
-    return <div>Loading...</div>;
-  }
-
-  const handleEditClick = (field) => {
-    setEditField(field);
-    setEditValue(profileData[field]);
+  const handleEditClick = (username, role) => {
+    setEditField(username);
+    setEditValue(role);
   };
 
-  const handleSaveClick = () => {
-    setProfileData({
-      ...profileData,
-      [editField]: editValue,
-    });
+  const handleSaveClick = (username) => {
+    setRoleData(roleData.map(user => 
+      user.username === username ? { ...user, role: editValue } : user
+    ));
     setEditField(null);
     setShowSuccessMessage(true);
 
@@ -55,15 +46,7 @@ const EditProfile = () => {
     setEditField(null);
   };
 
-  const profileFields = [
-    { label: 'Username', value: profileData.username, key: 'username' },
-    { label: 'First Name', value: profileData.first_name, key: 'first_name' },
-    { label: 'Last Name', value: profileData.last_name, key: 'last_name' },
-    { label: 'Codeforces ID', value: profileData.codeforces_id, key: 'codeforces_id' },
-    { label: 'Vjudge ID', value: profileData.vjudge_id, key: 'vjudge_id' },
-    { label: 'AtCoder ID', value: profileData.atcoder_id, key: 'atcoder_id' },
-    { label: 'CodeChef ID', value: profileData.codechef_id, key: 'codechef_id' },
-  ];
+  const roles = ['Admin', 'Moderator', 'User'];
 
   return (
     <div className="p-8">
@@ -71,7 +54,7 @@ const EditProfile = () => {
       <div className="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6">
         <div className="mb-4 flex justify-between">
           <Link to="/profile" className="text-blue-500 hover:underline">Overview</Link>
-          <span className="text-2xl font-bold text-gray-700">Edit Profile</span>
+          <span className="text-2xl font-bold text-gray-700">Edit Role</span>
         </div>
         {showSuccessMessage && (
           <div className="mb-4 text-green-500 text-center bg-green-100 border border-green-400 rounded-md p-2">
@@ -79,24 +62,27 @@ const EditProfile = () => {
           </div>
         )}
         <div className="flex flex-col space-y-4">
-          {profileFields.map((field, index) => (
+          {roleData.map((user, index) => (
             <div
-              key={field.key}
+              key={user.username}
               className="flex justify-between p-2 rounded-md"
               style={{ backgroundColor: index % 2 === 0 ? '#e0e0e0' : 'white' }}
             >
-              <span className="font-semibold text-gray-700">{field.label}:</span>
-              {editField === field.key ? (
+              <span className="font-semibold text-gray-700">{user.username}:</span>
+              {editField === user.username ? (
                 <>
-                  <input
-                    type="text"
+                  <select
                     value={editValue}
                     onChange={(e) => setEditValue(e.target.value)}
                     className="border border-gray-300 rounded-md px-2 py-1"
-                  />
+                  >
+                    {roles.map(role => (
+                      <option key={role} value={role}>{role}</option>
+                    ))}
+                  </select>
                   <div>
                     <button
-                      onClick={handleSaveClick}
+                      onClick={() => handleSaveClick(user.username)}
                       className="text-green-500 hover:underline mx-2"
                     >
                       Save Changes
@@ -111,9 +97,9 @@ const EditProfile = () => {
                 </>
               ) : (
                 <>
-                  <span>{field.value}</span>
+                  <span>{user.role}</span>
                   <button
-                    onClick={() => handleEditClick(field.key)}
+                    onClick={() => handleEditClick(user.username, user.role)}
                     className="text-blue-500 hover:underline"
                   >
                     Edit
@@ -123,15 +109,9 @@ const EditProfile = () => {
             </div>
           ))}
         </div>
-        <button
-          onClick={() => navigate('/edit-role')}
-          className="mt-4 p-2 bg-blue-500 text-white rounded-md"
-        >
-          Test
-        </button>
       </div>
     </div>
   );
 };
 
-export default EditProfile;
+export default EditRole;
