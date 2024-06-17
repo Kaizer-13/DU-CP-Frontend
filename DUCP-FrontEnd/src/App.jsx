@@ -24,6 +24,7 @@ import CreatePost from './Pages/CreatePost';
 import EditRoles from './Pages/EditRoles';
 import CreateContests from './Pages/CreateContests';
 import CheckContest from './Pages/CheckContest';
+import ForgotPassword from './Pages/ForgotPassword';
 
 function App() {
   return (
@@ -79,6 +80,7 @@ function App() {
       <Route path="/create-announcement" element={<CreatePost announcement={true}/>} />
       <Route path="/posts/:id" element={<PostPage/>} />
       <Route path="/edit-role" element={<EditRoles />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
       </Routes>
     </Router>
   </>

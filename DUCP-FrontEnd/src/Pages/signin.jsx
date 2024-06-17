@@ -73,14 +73,15 @@ function Signin() {
   return (
     <div className="min-h-screen flex">
       {/* Dark blue section covering one-third of the screen */}
-      <div className="w-1/3 bg-dark-blue flex flex-col items-center justify-center text-white">
+      <div className="w-1/3 bg-dark-blue flex flex-col items-center justify-start text-white py-20 sticky top-0 h-screen">
         <div className="flex flex-col items-center mt-0 font-sedan">
           {'DUCU'.split('').map((char, index) => (
-            <span key={index} className="text-8xl font-bold mb-10">{char}</span>
+            <span key={index} className="text-6xl font-bold mb-10">{char}</span>
           ))}
-          <img src={logo} alt="DUCU Logo" className="mt-20" style={{ width: '100px', height: '150px' }} />
+          <img src={logo} alt="DUCU Logo" className="mt-10" style={{ width: '100px', height: '150px' }} />
         </div>
       </div>
+   
 
       {/* White section covering two-thirds of the screen */}
       <div className="w-2/3 bg-white flex justify-center items-center">
@@ -127,7 +128,7 @@ function Signin() {
               </button>
             </div>
             <div className="text-right mb-0">
-              <a href="#" className="inline-block align-baseline text-sm text-neutral-500 hover:text-dark-blue underline mt-2 text-right">
+              <a href="./forgot-password" className="inline-block align-baseline text-sm text-neutral-500 hover:text-dark-blue underline mt-2 text-right">
                 Forgot Password?
               </a>
             </div>

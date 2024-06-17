@@ -50,7 +50,7 @@ function Contests() {
     <div className="min-h-screen bg-gray-100 flex flex-col">
       <Navbar />
       <div className="flex flex-col p-4 mr-12 ml-12 space-y-4">
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between items-center mb-4 space-x-4">
           <input
             type="text"
             placeholder="Search contests..."

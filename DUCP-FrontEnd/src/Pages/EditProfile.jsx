@@ -66,69 +66,73 @@ const EditProfile = () => {
   ];
 
   return (
-    <div className="p-8">
-      <Navbar />
-      <div className="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6">
-        <div className="mb-4 flex justify-between">
-          <Link to="/profile" className="text-blue-500 hover:underline">Overview</Link>
-          <span className="text-2xl font-bold text-gray-700">Edit Profile</span>
-        </div>
-        {showSuccessMessage && (
-          <div className="mb-4 text-green-500 text-center bg-green-100 border border-green-400 rounded-md p-2">
-            Successfully updated!
+    <div className="min-h-screen flex flex-col">
+      <div className="w-full">
+        <Navbar />
+      </div>
+      <div className="flex-grow p-8">
+        <div className="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6">
+          <div className="mb-4 flex justify-between">
+            <Link to="/profile" className="text-blue-500 hover:underline">Overview</Link>
+            <span className="text-2xl font-bold text-gray-700">Edit Profile</span>
           </div>
-        )}
-        <div className="flex flex-col space-y-4">
-          {profileFields.map((field, index) => (
-            <div
-              key={field.key}
-              className="flex justify-between p-2 rounded-md"
-              style={{ backgroundColor: index % 2 === 0 ? '#e0e0e0' : 'white' }}
-            >
-              <span className="font-semibold text-gray-700">{field.label}:</span>
-              {editField === field.key ? (
-                <>
-                  <input
-                    type="text"
-                    value={editValue}
-                    onChange={(e) => setEditValue(e.target.value)}
-                    className="border border-gray-300 rounded-md px-2 py-1"
-                  />
-                  <div>
-                    <button
-                      onClick={handleSaveClick}
-                      className="text-green-500 hover:underline mx-2"
-                    >
-                      Save Changes
-                    </button>
-                    <button
-                      onClick={handleCancelClick}
-                      className="text-red-500 hover:underline mx-2"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <span>{field.value}</span>
-                  <button
-                    onClick={() => handleEditClick(field.key)}
-                    className="text-blue-500 hover:underline"
-                  >
-                    Edit
-                  </button>
-                </>
-              )}
+          {showSuccessMessage && (
+            <div className="mb-4 text-green-500 text-center bg-green-100 border border-green-400 rounded-md p-2">
+              Successfully updated!
             </div>
-          ))}
+          )}
+          <div className="flex flex-col space-y-4">
+            {profileFields.map((field, index) => (
+              <div
+                key={field.key}
+                className="flex justify-between p-2 rounded-md"
+                style={{ backgroundColor: index % 2 === 0 ? '#e0e0e0' : 'white' }}
+              >
+                <span className="font-semibold text-gray-700">{field.label}:</span>
+                {editField === field.key ? (
+                  <>
+                    <input
+                      type="text"
+                      value={editValue}
+                      onChange={(e) => setEditValue(e.target.value)}
+                      className="border border-gray-300 rounded-md px-2 py-1"
+                    />
+                    <div>
+                      <button
+                        onClick={handleSaveClick}
+                        className="text-green-500 hover:underline mx-2"
+                      >
+                        Save Changes
+                      </button>
+                      <button
+                        onClick={handleCancelClick}
+                        className="text-red-500 hover:underline mx-2"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <span>{field.value}</span>
+                    <button
+                      onClick={() => handleEditClick(field.key)}
+                      className="text-blue-500 hover:underline"
+                    >
+                      Edit
+                    </button>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+          <button
+            onClick={() => navigate('/edit-role')}
+            className="mt-4 p-2 bg-blue-500 text-white rounded-md"
+          >
+            Test
+          </button>
         </div>
-        <button
-          onClick={() => navigate('/edit-role')}
-          className="mt-4 p-2 bg-blue-500 text-white rounded-md"
-        >
-          Test
-        </button>
       </div>
     </div>
   );
