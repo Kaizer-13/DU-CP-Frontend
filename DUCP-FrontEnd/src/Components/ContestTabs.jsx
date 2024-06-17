@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ProblemComponent from '../Components/ProblemComponent.jsx';
 import ProblemTable from './ProblemTable.jsx';
 import StandingsTable from './StandingsTable.jsx';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 
 const ContestTabs = ({ contestData }) => {
@@ -135,8 +137,8 @@ const ContestTabs = ({ contestData }) => {
           tries: 0,
           problems: Object.values(entry.status).map(status => {
             if (status === 1) return 'Accepted';
-            if (status === -1) return 'Wrong Answer';
-            return 'None';
+            if (status === 0) return 'None';
+            return 'Wrong Answer';
           })
         }));
 
@@ -169,11 +171,13 @@ const ContestTabs = ({ contestData }) => {
       setPlagiarismResults(response.data);
     } catch (error) {
       console.error('Error fetching plagiarism check:', error);
+      toast.error(error);
     }
   };
 
   return (
     <div className="w-full">
+     <ToastContainer/>
       <div className="flex border-b">
         <button
           className={`w-1/3 py-2 text-center ${activeTab === 'overview' ? 'border-b-2 border-blue-500 text-blue-500' : 'text-gray-500'}`}
@@ -205,7 +209,7 @@ const ContestTabs = ({ contestData }) => {
             <p>End Time: {new Date(contestData.contest_end_time).toLocaleString()}</p>
             <ProblemTable problems={problems} onProblemClick={handleProblemClick} />
             <div className="mt-4 flex justify-center">
-              <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600" onClick={handlePlagiarismCheck}>
+              <button className="bg-yellow text-black font-bold py-3 px-6 rounded-lg shadow-md hover:bg-dark-yellow focus:outline-none focus:ring-2 focus:ring-blue-400" onClick={handlePlagiarismCheck}>
                 Check Plagiarism
               </button>
             </div>

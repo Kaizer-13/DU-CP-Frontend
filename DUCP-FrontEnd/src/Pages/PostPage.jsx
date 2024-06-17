@@ -7,7 +7,10 @@ import PostComponent from '../Components/PostComponent';
 
 function PostPage() {
     const { postId } = useParams();
+    const isPost = window.location.pathname.startsWith('/posts/');
     console.log(postId);
+    console.log(isPost);
+
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
       <Navbar/>
@@ -15,8 +18,7 @@ function PostPage() {
 
       
           <Announcement/>
-
-          <PostComponent postId={postId}/>
+          <PostComponent postId={postId} isPost={isPost}/>
 
       </div>
 

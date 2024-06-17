@@ -22,6 +22,8 @@ import ProblemPage from './Pages/ProblemPage';
 import PostPage from './Pages/PostPage';
 import CreatePost from './Pages/CreatePost';
 import EditRoles from './Pages/EditRoles';
+import CreateContests from './Pages/CreateContests';
+import CheckContest from './Pages/CheckContest';
 
 function App() {
   return (
@@ -66,10 +68,13 @@ function App() {
             element={<Profile/>} 
 
         />
+      <Route path="/createContests" element={<CreateContests/>}/>
+      <Route path="/checkContest" element={<CheckContest/>}/>
       <Route path="/edit-profile" element={<EditProfile />} />
       <Route path="/practice" element={<Practice/>}/>
       <Route path="/problem/:problemId" element={<ProblemPage/>} />
       <Route path="/posts/:postId" element={<PostPage/>} />
+      <Route path="/announcements/:postId" element={<PostPage/>} />
       <Route path="/create-post" element={<CreatePost announcement={false}/>} />
       <Route path="/create-announcement" element={<CreatePost announcement={true}/>} />
       <Route path="/posts/:id" element={<PostPage/>} />

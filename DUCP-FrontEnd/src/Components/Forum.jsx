@@ -40,7 +40,7 @@ function ForumComponent() {
       <div className="flex justify-between items-center mb-4">
         <h2 className="font-bold text-3xl">Forum</h2>
         <Link to="/create-post">
-          <button className="p-2 bg-blue-500 text-white rounded">Create Post</button>
+          <button className="bg-yellow text-black font-bold py-3 px-6 rounded-lg shadow-md hover:bg-dark-yellow focus:outline-none focus:ring-2 focus:ring-blue-400">Create Post</button>
         </Link>
       </div>
       {posts.map((post, index) => (

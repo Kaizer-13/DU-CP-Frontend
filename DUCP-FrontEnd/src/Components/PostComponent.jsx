@@ -3,7 +3,7 @@ import profile from '../Resources/default_dp.png';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const PostComponent = ({ postId }) => {
+const PostComponent = ({ postId, isPost }) => {
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
@@ -25,8 +25,28 @@ const PostComponent = ({ postId }) => {
         console.error('Error fetching post:', error);
       }
     };
-
-    const fetchComments = async () => {
+    const fetchAnnouncement = async () => {
+      try {
+        const response = await fetch(`http://103.209.199.186:5000/posts/announcement`);
+        const postData = await response.json();
+        const filteredPost = postData.find((announcement) => announcement.id === Number(postId));
+        if (filteredPost) {
+          setPost({
+            username: filteredPost.poster,
+            profile: profile,
+            topic: filteredPost.title,
+            details: filteredPost.text,
+            timestamp: new Date(filteredPost.created_at).toLocaleString(),
+          });
+        } else {
+          console.log(`No announcement found with ID: ${postId}`);
+          toast.error('Announcement not found');
+        }
+      } catch (error) {
+        console.error('Error fetching announcement:', error);
+        toast.error(error);
+      }
+    };    const fetchComments = async () => {
       try {
         const response = await fetch(`http://103.209.199.186:5000/posts/post/${postId}/comments`);
         const commentsData = await response.json();
@@ -40,10 +60,13 @@ const PostComponent = ({ postId }) => {
         console.error('Error fetching comments:', error);
       }
     };
-
-    fetchPost();
-    fetchComments();
-  }, [postId]);
+    if(isPost){
+      fetchPost();
+      fetchComments();
+    } else {
+      fetchAnnouncement();
+    }
+  }, [postId, isPost]);
 
   const handleCommentChange = (e) => {
     setNewComment(e.target.value);
@@ -106,8 +129,9 @@ const PostComponent = ({ postId }) => {
         <h2 className="font-bold text-2xl mb-4">{post.topic}</h2>
         <p className="text-gray-800">{post.details}</p>
       </div>
-
-      <div>
+      {(isPost)?(
+        <>
+        <div>
         {comments.map((comment, index) => (
           <div key={index} className="bg-gray-100 p-4 rounded-lg shadow mb-4">
             <div className="flex justify-between items-center mb-2">
@@ -133,10 +157,14 @@ const PostComponent = ({ postId }) => {
             value={newComment}
             onChange={handleCommentChange}
           ></textarea>
-          <button className="p-2 bg-blue-500 text-white rounded" type="submit">Submit Comment</button>
+          <button className="bg-yellow text-black font-bold py-3 px-6 rounded-lg shadow-md hover:bg-dark-yellow focus:outline-none focus:ring-2 focus:ring-blue-400" type="submit">Submit Comment</button>
         </form>
       </div>
-    </div>
+    </>
+      ):(
+        <></>
+      )}
+    </div> 
   );
 };
 
