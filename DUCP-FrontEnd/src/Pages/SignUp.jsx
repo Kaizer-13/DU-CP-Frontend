@@ -20,10 +20,13 @@ function SignUp() {
     codechefHandle: ''
   });
 
+  const [errors, setErrors] = useState({});
+
   // Handle form input changes
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
+    setErrors({ ...errors, [id]: '' });
   };
 
   // Handle form submission
@@ -34,11 +37,39 @@ function SignUp() {
       firstName,
       lastName,
       password,
+      confirmPassword,
       codeforcesHandle,
       vjudgeHandle,
       atcoderHandle,
       codechefHandle
     } = formData;
+
+    // Validate form fields
+    const newErrors = {};
+    if (!firstName) newErrors.firstName = "Enter first name";
+    else if (!lastName) newErrors.lastName = "Enter last name";
+    else if (!username) newErrors.username = "Enter username";
+    
+    else if (!vjudgeHandle) newErrors.vjudgeHandle = "Enter VJudge handle";
+    else if (!atcoderHandle) newErrors.atcoderHandle = "Enter AtCoder handle";
+    else if (!codeforcesHandle) newErrors.codeforcesHandle = "Enter Codeforces handle";
+    else if (!codechefHandle) newErrors.codechefHandle = "Enter CodeChef handle";
+
+    else if (!email) newErrors.email = "Enter email address";
+    else if (!password) newErrors.password = "Enter password";
+    else if (password.length<6) newErrors.password="Password must be at least six characters long"
+    else if (!confirmPassword) newErrors.confirmPassword = "Enter confirm password";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    // Check if passwords match
+    if (password !== confirmPassword) {
+      setErrors({ confirmPassword: "Passwords do not match" });
+      return;
+    }
 
     // Create the request body
     const requestBody = {
@@ -57,18 +88,24 @@ function SignUp() {
       // Send a POST request to the backend
       const response = await axios.post('http://103.209.199.186:5000/auth/signup', requestBody);
 
-
-  
-
-    
-
       // If sign-up is successful, navigate to the home page or dashboard
       if (response.status === 200) {
         navigate('/');
       }
     } catch (error) {
       console.error('Error during sign-up:', error);
-      // Handle error accordingly (e.g., show an error message to the user)
+
+      // Handle error response from backend
+      if (error.response) {
+        const { status, data } = error.response;
+        if (status === 409) {
+          
+          setErrors({ username: 'Username already exists' });
+          
+        }
+      } else {
+        setErrors({ general: 'Network error. Please try again.' });
+      }
     }
   };
 
@@ -89,6 +126,12 @@ function SignUp() {
         <form className="w-full max-w-md py-8">
           <h2 className="text-2xl font-bold text-gray-700 mb-4">Create Account</h2>
 
+          {errors.general && (
+            <div className="mb-4 text-black">
+              {errors.general}
+            </div>
+          )}
+
           {[
             { id: 'firstName', label: 'First Name', type: 'text' },
             { id: 'lastName', label: 'Last Name', type: 'text' },
@@ -106,13 +149,18 @@ function SignUp() {
                 {field.label}
               </label>
               <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className={`shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline ${
+                  errors[field.id] ? 'border-black' : 'border-gray-300'
+                }`}
                 id={field.id}
                 type={field.type}
                 placeholder={field.label}
                 value={formData[field.id]}
                 onChange={handleInputChange}
               />
+              {errors[field.id] && (
+                <p className="text-black text-s">{errors[field.id]}</p>
+              )}
             </div>
           ))}
 
