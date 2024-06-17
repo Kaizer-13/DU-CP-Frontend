@@ -21,6 +21,7 @@ import Practice from './Pages/Practice';
 import ProblemPage from './Pages/ProblemPage';
 import PostPage from './Pages/PostPage';
 import CreatePost from './Pages/CreatePost';
+import EditRoles from './Pages/EditRoles';
 
 function App() {
   return (
@@ -72,6 +73,7 @@ function App() {
       <Route path="/create-post" element={<CreatePost announcement={false}/>} />
       <Route path="/create-announcement" element={<CreatePost announcement={true}/>} />
       <Route path="/posts/:id" element={<PostPage/>} />
+      <Route path="/edit-role" element={<EditRoles />} />
       </Routes>
     </Router>
   </>
