@@ -124,7 +124,7 @@ const ProblemComponent = ({ problemId, problemUrl, timestamps }) => {
             <option value="c">C</option>
             <option value="java">Java</option>
           </select>
-          <button className="w-full p-2 bg-blue-500 text-white rounded" onClick={handleSubmit}>Submit</button>
+          <button className="bg-yellow text-black font-bold py-3 w-full rounded-lg shadow-md hover:bg-dark-yellow focus:outline-none focus:ring-2 focus:ring-blue-400" onClick={handleSubmit}>Submit</button>
         </div>
         <ul className="list-none">
           {timestamps.map((item, index) => (

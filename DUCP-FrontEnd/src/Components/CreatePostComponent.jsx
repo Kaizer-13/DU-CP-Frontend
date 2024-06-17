@@ -60,7 +60,7 @@ const CreatePostComponent = ({ announcement }) => {
       }
     } catch (error) {
       setError('An error occurred while submitting the post');
-      toast.error('An error occurred while submitting the post');
+      toast.error('An error occurred while submitting the post', error);
     }
   };
 
@@ -94,7 +94,7 @@ const CreatePostComponent = ({ announcement }) => {
             onChange={handleBodyChange}
           ></textarea>
         </div>
-        <button className="p-2 bg-blue-500 text-white rounded" type="submit">
+        <button className="bg-yellow text-black font-bold py-3 px-6 rounded-lg shadow-md hover:bg-dark-yellow focus:outline-none focus:ring-2 focus:ring-blue-400" type="submit">
           Submit
         </button>
       </form>
