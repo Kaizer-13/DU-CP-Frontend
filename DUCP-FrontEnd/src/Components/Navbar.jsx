@@ -42,7 +42,9 @@ function Navbar(){
             {/* Right-aligned section for profile picture and username */}
             <div className="flex items-center space-x-4"> {/* Using flex to align items horizontally */}
                 <div className="flex flex-col items-center space-y-2">
+                    <Link to ="/profile" title="My profile">
                     <img src={user.profilePic || profile} alt="Profile" className="h-12 w-12 rounded-full" />
+                    </Link>
                     <span className="text-white">{user.username || 'Guest'}</span>
                 </div>
                 <button className=" bg-transparent text-gray-300  underline py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:text-white">

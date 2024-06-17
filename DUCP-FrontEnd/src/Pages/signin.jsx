@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import logo from '../Resources/csedu.png';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 function Signin() {
   const [username, setUsername] = useState('');
@@ -14,16 +16,24 @@ function Signin() {
 
   const handleSignIn = async (e) => {
     e.preventDefault();
+    setErrorMessage(''); // Clear any existing error messages
+
+    // Check if the fields are empty
+    if (!username || !password) {
+      setErrorMessage('Please enter your email and password');
+      return;
+    }
+
     setIsLoading(true); // Start loading
 
-    const requestBody = {
+    const requestBody = new URLSearchParams({
       'grant_type': '',
       'username': username,
       'password': password,
       'scope': '',
       'client_id': '',
       'client_secret': ''
-    };
+    });
 
     try {
       const response = await axios.post('http://103.209.199.186:5000/token', requestBody, {
@@ -37,47 +47,27 @@ function Signin() {
       console.log('Successful response data:', data);
 
       // Handle the response data here, such as storing the tokens
-      localStorage.setItem('access_token', data.access_token);
-      localStorage.setItem('refresh_token', data.refresh_token);
+      if (data.access_token) {
+        localStorage.setItem('access_token', data.access_token);
+        localStorage.setItem('refresh_token', data.refresh_token);
 
-      console.log(response.status);
-      // Navigate to the dashboard
-      if (response.status === 200 && data.access_token!=null) {
+        // Navigate to the dashboard
         navigate('/dashboard');
+      } else {
+        setErrorMessage('Invalid username or password');
       }
     } catch (error) {
       console.error('Error during sign in:', error);
-      setErrorMessage(error.message);
+
+      if (!error.response) {
+        // Network error
+        setErrorMessage('Network error');
+      } else {
+        setErrorMessage('Invalid username or password');
+      }
     } finally {
       setIsLoading(false); // Stop loading
     }
-  };
-
-  // Utility function to make authenticated requests
-  const makeAuthenticatedRequest = async (url, options = {}) => {
-    const token = localStorage.getItem('access_token');
-    if (!token) {
-      throw new Error('No access token found');
-    }
-
-    const headers = {
-      ...options.headers,
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    };
-
-    const response = await fetch(url, {
-      ...options,
-      headers,
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('Error data from server:', errorData);
-      throw new Error(errorData.message || 'Request failed');
-    }
-
-    return response.json();
   };
 
   return (
@@ -98,19 +88,19 @@ function Signin() {
           <h2 className="text-2xl font-bold text-gray-700 mb-4">Sign In</h2>
           {isLoading && <div className="mb-4 text-gray-700">Signing in...</div>}
           {errorMessage && (
-            <div className="mb-4 text-red-500">
+            <div className="mb-4 text-black"> {/* Changed text color to black */}
               {errorMessage}
             </div>
           )}
           <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-              Username
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+              Email
             </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="username"
+              id="email"
               type="text"
-              placeholder="Username"
+              placeholder="Email"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
@@ -121,7 +111,7 @@ function Signin() {
             </label>
             <div className="relative">
               <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline pr-10"
                 id="password"
                 type={passwordVisible ? 'text' : 'password'}
                 placeholder="********"
@@ -130,10 +120,10 @@ function Signin() {
               />
               <button
                 type="button"
-                className="absolute inset-y-0 right-0 px-3 py-2"
+                className="absolute inset-y-0 right-0 px-3 mb-3  flex items-center justify-right"
                 onClick={() => setPasswordVisible(!passwordVisible)}
               >
-                {passwordVisible ? 'Hide' : 'Show'}
+                <FontAwesomeIcon icon={passwordVisible ? faEyeSlash : faEye} />
               </button>
             </div>
             <div className="text-right mb-0">
@@ -144,7 +134,7 @@ function Signin() {
           </div>
           <div className="flex items-center justify-center">
             <button
-              className="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-yellow hover:bg-dark-yellow text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
               disabled={isLoading} // Disable button while loading
             >
