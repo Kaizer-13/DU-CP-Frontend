@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { AiOutlineCheck, AiOutlineClose, AiOutlineMinus } from 'react-icons/ai';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const ProblemComponent = ({ problemId, timestamps }) => {
+const ProblemComponent = ({ problemId, problemUrl, timestamps }) => {
   const [pdfContent, setPdfContent] = useState(null);
   const [error, setError] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -27,7 +29,6 @@ const ProblemComponent = ({ problemId, timestamps }) => {
         // Convert ArrayBuffer to base64 string
         const base64Pdf = arrayBufferToBase64(response.data);
         const pdfDataUri = `data:application/pdf;base64,${base64Pdf}`;
-        // console.log('PDF Data URI:', pdfDataUri);
         setPdfContent(pdfDataUri);
       } catch (error) {
         console.error('Error fetching problem data:', error);
@@ -47,17 +48,19 @@ const ProblemComponent = ({ problemId, timestamps }) => {
     }
     return btoa(binary);
   };
+
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
   };
-//  console.log(timestamps)
+
   const handleSubmit = async () => {
     try {
       const token = localStorage.getItem('access_token');
       const formData = new FormData();
       formData.append('file', selectedFile);
 
-      const response = await axios.post(
+      // Upload the file
+      const uploadResponse = await axios.post(
         `http://103.209.199.186:5000/contestant/upload_file?problem_id=${problemId}`,
         formData,
         {
@@ -68,13 +71,37 @@ const ProblemComponent = ({ problemId, timestamps }) => {
         }
       );
 
+      const filePath = uploadResponse.data.file_path;
       setUploadStatus('File uploaded successfully.');
-      console.log('Upload response:', response.data);
+      console.log('Upload response:', uploadResponse.data);
+
+      // Encode the file path and problem URL
+      const encodedFilePath = encodeURIComponent(filePath);
+      const encodedProblemUrl = encodeURIComponent(problemUrl);
+
+      // Submit the file
+      const submitUrl = `http://103.209.199.186:5000/contestant/submit/${problemId}?file_path=${encodedFilePath}&problem_url=${encodedProblemUrl}`;
+      const submitResponse = await axios.post(
+        submitUrl,
+        {},
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      console.log('Submit response:', submitResponse.data);
+      setUploadStatus('File submitted successfully.');
+      toast.success('File submitted successfully.');
     } catch (error) {
-      console.error('Error uploading file:', error);
-      setUploadStatus('Failed to upload file.');
+      console.error('Error submitting file:', error);
+      setUploadStatus('Failed to submit file.');
+      toast.error('Failed to submit file.');
     }
   };
+
   return (
     <div className="flex h-screen">
       <div className="w-2/3 p-4">
@@ -109,6 +136,7 @@ const ProblemComponent = ({ problemId, timestamps }) => {
             </li>
           ))}
         </ul>
+        <ToastContainer />
       </div>
     </div>
   );

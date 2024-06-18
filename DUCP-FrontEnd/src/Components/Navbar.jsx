@@ -11,9 +11,9 @@ function Navbar(){
         // Function to fetch user data from the server
         const fetchUserData = async () => {
         try {
-            const response = await fetch('/api/user-data'); // API endpoint to fetch user data
-            const userData = await response.json();
-            setUser({ username: userData.username, profilePic: userData.profilePic });
+            // const response = await fetch('/api/user-data'); // API endpoint to fetch user data
+            // const userData = await response.json();
+            // setUser({ username: userData.username, profilePic: userData.profilePic });
         } catch (error) {
             console.error('Failed to fetch user data:', error);
         }
@@ -34,7 +34,7 @@ function Navbar(){
                     <Link to ="/dashboard" className="text-gray-300 hover:text-white">Home</Link>
                     <Link to="/leaderboard" className="text-gray-300 hover:text-white">Leaderboard</Link>
                     <Link to="/contests" className="text-gray-300 hover:text-white">Contest</Link>
-                    <a href="#practice" className="text-gray-300 hover:text-white">Practice</a>
+                    <Link to="/practice" className="text-gray-300 hover:text-white">Practice</Link>
                     <a href="#contact" className="text-gray-300 hover:text-white">Contact</a>
                 </div>
             </div>
@@ -42,7 +42,9 @@ function Navbar(){
             {/* Right-aligned section for profile picture and username */}
             <div className="flex items-center space-x-4"> {/* Using flex to align items horizontally */}
                 <div className="flex flex-col items-center space-y-2">
+                    <Link to ="/profile" title="My profile">
                     <img src={user.profilePic || profile} alt="Profile" className="h-12 w-12 rounded-full" />
+                    </Link>
                     <span className="text-white">{user.username || 'Guest'}</span>
                 </div>
                 <button className=" bg-transparent text-gray-300  underline py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:text-white">

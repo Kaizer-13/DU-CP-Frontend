@@ -4,46 +4,45 @@ import Navbar from '../Components/Navbar';
 import Table from '../Components/Table';
 import { Link } from 'react-router-dom';
 
-const contestColumns = [
-  { Header: 'Contest ID', accessor: 'id' },
-  { Header: 'Title', accessor: 'name' },
-  { Header: 'Begin Time', accessor: 'start_time' },
-  { Header: 'Duration', accessor: 'duration' },
+const problemColumns = [
+  { Header: 'Problem ID', accessor: 'id' },
+  { Header: 'Name', accessor: 'name' },
+  { Header: 'Judge', accessor: 'problem_judge' },
 ];
 
-function Contests() {
-  const [contestData, setContestData] = useState([]);
+function Practice() {
+  const [problemData, setProblemData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    const fetchContests = async () => {
+    const fetchProblems = async () => {
       try {
         const token = localStorage.getItem('access_token');
         if (!token) {
           throw new Error('No access token found');
         }
 
-        const response = await axios.get('http://103.209.199.186:5000/contestant/contests', {
+        const response = await axios.get('http://103.209.199.186:5000/contestant/problems', {
           headers: {
             'accept': 'application/json',
             'Authorization': `Bearer ${token}`
           }
         });
-        setContestData(response.data.contests);
+        setProblemData(response.data.Problems);
       } catch (error) {
-        console.error('Error fetching contest data:', error);
+        console.error('Error fetching problem data:', error);
       }
     };
-
-    fetchContests();
+    
+    fetchProblems();
   }, []);
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
 
-  const filteredContests = contestData.filter(contest =>
-    contest.contest_name.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredProblems = problemData.filter(problem =>
+    problem.problem_name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -53,29 +52,29 @@ function Contests() {
         <div className="flex justify-between items-center mb-4">
           <input
             type="text"
-            placeholder="Search contests..."
+            placeholder="Search problems..."
             value={searchQuery}
             onChange={handleSearchChange}
             className="p-2 w-4/5 border border-gray-300 rounded"
           />
           <div className="flex space-x-8">
-            <Link to="/createContests" className="underline text-gray-500 hover:text-dark-blue font-bold">
-              Create a Contest
+            <Link to="/contests" className="underline text-gray-500 hover:text-dark-blue font-bold">
+              Contests
             </Link>
-            <a href="#codeforces-rating" className="underline text-gray-500 hover:text-dark-blue font-bold">
-              Codeforces Rating
+            <a href="#practice-problems" className="underline text-gray-500 hover:text-dark-blue font-bold">
+              Practice Problems
             </a>
           </div>
         </div>
         <Table
-          title="Contests"
-          subtitle="Contests held in recent months"
-          columns={contestColumns}
-          data={filteredContests.map(contest => ({
-            ...contest,
+          title="Practice Problems"
+          subtitle="Practice problems available for you"
+          columns={problemColumns}
+          data={filteredProblems.map(problem => ({
+            ...problem,
             name: (
-              <Link to={`/contests/${contest.id}`} className="text-blue-500 hover:underline">
-                {contest.contest_name}
+              <Link to={`/problem/${problem.id}`} className="text-blue-500 hover:underline">
+                {problem.problem_name}
               </Link>
             )
           }))}
@@ -85,4 +84,4 @@ function Contests() {
   );
 }
 
-export default Contests;
+export default Practice;
