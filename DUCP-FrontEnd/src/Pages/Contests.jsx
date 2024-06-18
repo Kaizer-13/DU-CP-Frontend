@@ -62,9 +62,9 @@ function Contests() {
             <Link to="/createContests" className="underline text-gray-500 hover:text-dark-blue font-bold">
               Create a Contest
             </Link>
-            <a href="#codeforces-rating" className="underline text-gray-500 hover:text-dark-blue font-bold">
-              Codeforces Rating
-            </a>
+            <Link to="/checkContest" className="underline text-gray-500 hover:text-dark-blue font-bold">
+              Check External Contest
+            </Link>
           </div>
         </div>
         <Table
