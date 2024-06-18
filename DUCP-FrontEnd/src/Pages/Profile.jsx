@@ -40,24 +40,28 @@ const Profile = () => {
   ];
 
   return (
-    <div className="p-8">
+    <div className="min-h-screen flex flex-col">
+      <div className="w-full">
         <Navbar />
+      </div>
+      <div className="flex-grow p-8">
         <div className="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6">
-        <div className="mb-4 flex justify-between">
-          <span className="text-2xl font-bold text-gray-700">Overview</span>
-          <Link to="/edit-profile" className="text-blue-500 hover:underline">Edit Profile</Link>
-        </div>
-        <div className="flex flex-col space-y-4">
-          {profileFields.map((field, index) => (
-            <div
-              key={field.label}
-              className="flex justify-between p-2 rounded-md"
-              style={{ backgroundColor: index % 2 === 0 ? '#e0e0e0' : 'white' }}
-            >
-              <span className="font-semibold text-gray-700">{field.label}:</span>
-              <span>{field.value}</span>
-            </div>
-          ))}
+          <div className="mb-4 flex justify-between">
+            <span className="text-2xl font-bold text-gray-700">Overview</span>
+            <Link to="/edit-profile" className="text-blue-500 hover:underline">Edit Profile</Link>
+          </div>
+          <div className="flex flex-col space-y-4">
+            {profileFields.map((field, index) => (
+              <div
+                key={field.label}
+                className="flex justify-between p-2 rounded-md"
+                style={{ backgroundColor: index % 2 === 0 ? '#e0e0e0' : 'white' }}
+              >
+                <span className="font-semibold text-gray-700">{field.label}:</span>
+                <span>{field.value}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

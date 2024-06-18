@@ -27,7 +27,7 @@ function Navbar(){
             {/* Left-aligned section for logo, text, and navigation links */}
             <div className="flex items-center text-white">
                 <img src={logo} alt="DUCU Logo" className="h-12 w-auto mr-3" />
-                <span className="font-semibold text-3xl tracking-tight">DUCU</span>
+                <span className=" font-sedan text-3xl tracking-tight ">DUCU</span>
 
                 {/* Navigation links */}
                 <div className="ml-6 space-x-4">  {/* Adds some margin left after the DUCU text */}

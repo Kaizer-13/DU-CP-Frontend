@@ -112,12 +112,12 @@ function SignUp() {
   return (
     <div className="min-h-screen flex">
       {/* Dark blue section covering one-third of the screen */}
-      <div className="w-1/3 bg-dark-blue flex flex-col items-center justify-start text-white py-20">
+      <div className="w-1/3 bg-dark-blue flex flex-col items-center justify-start text-white py-20 sticky top-0 h-screen">
         <div className="flex flex-col items-center mt-0 font-sedan">
           {'DUCU'.split('').map((char, index) => (
-            <span key={index} className="text-8xl font-bold mb-10">{char}</span>
+            <span key={index} className="text-6xl font-bold mb-10">{char}</span>
           ))}
-          <img src={logo} alt="DUCU Logo" className="mt-20" style={{ width: '100px', height: '150px' }} />
+          <img src={logo} alt="DUCU Logo" className="mt-10" style={{ width: '100px', height: '150px' }} />
         </div>
       </div>
 

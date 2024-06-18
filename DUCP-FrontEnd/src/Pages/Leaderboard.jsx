@@ -1,34 +1,57 @@
 // Leaderboard.js
 import React from 'react';
-
+import axios from 'axios';
+import {useState, useEffect} from 'react';
 import Navbar from '../Components/Navbar'
 import Table from '../Components/Table';
 import Filter from '../Components/Filter';
 
 const leaderboardColumns = [
-    { Header: 'Standing', accessor: 'standing' },
+    { Header: 'Standing', accessor: 'rank' },
     { Header: 'Username', accessor: 'username' },
-    { Header: 'Solve Count', accessor: 'solveCount' },
+    { Header: 'Solve Count', accessor: 'solve_count' },
   ];
 
-  const leaderboardData = [
-    { standing: 1, username: 'Kaiser69', solveCount: 69420 },
-    { standing: 2, username: 'Bithi01', solveCount: 1289 },
-    { standing: 3, username: 'TosnimClasseAsho', solveCount: 690 },
-    { standing: 4, username: 'SinhaKoi', solveCount: 420 },
-    { standing: 5, username: 'unnoorisd3ad', solveCount: 90 },
-  ];
-  
   
 function Leaderboard() {
+  const [leaderboardData, setLeaderboardData] = useState([]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem('access_token');
+        if (!token) {
+          throw new Error('No access token found');
+        }
+
+        const response = await axios.get('http://103.209.199.186:5000/contestant/global_rank', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        const data = response.data.map((item) => ({
+          rank: item.rank,
+          username: item.username,
+          solve_count: item.solve_count
+        }));
+
+        setLeaderboardData(data);
+      } catch (error) {
+        console.error('Error fetching leaderboard data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
     
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col">
             <Navbar/>
             <div className="flex flex-row justify-between p-4 mr-12 ml-12">
               {/* Leaderboard Table */}
-              <div className="w-2/3 pr-4">
+              <div className="w-full pr-4">
                 <Table
                     title="Leaderboard"
                     subtitle="Users participated in recent months"
@@ -37,9 +60,9 @@ function Leaderboard() {
           
                 />
                 </div>
-                {/* Filter Section */}
+                {/* 
                 
-                    <Filter />
+                    <Filter /> */}
                 
             </div>
         </div>
