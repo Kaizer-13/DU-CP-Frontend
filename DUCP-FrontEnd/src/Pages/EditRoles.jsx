@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+import profile from '../Resources/grey_dp.png'; // Import default profile picture
+
+
 const EditRoles = () => {
   const [rolesData, setRolesData] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
@@ -24,12 +27,25 @@ const EditRoles = () => {
             email: user.email,
             firstName: user.first_name, // Added first name
             role: user.role,
-            dateAdded: user.dateAdded,
-            lastActive: user.lastActive,
-            profilePic: user.profilePic
+           
           }));
           setRolesData(users);
         }
+
+        const profilePicResponse = await axios.get('http://103.209.199.186:5000/auth/profile-photo', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'image/jpeg',
+          },
+          responseType: 'blob', // Ensure the response is a blob
+        });
+
+        if (profilePicResponse.status === 200) {
+          const imageUrl = URL.createObjectURL(profilePicResponse.data);
+          profilePic:imageUrl
+        }
+
+       
       } catch (error) {
         console.error('Error fetching roles data:', error);
       }
@@ -110,7 +126,7 @@ const EditRoles = () => {
                 {filteredRolesData.map((roleData, index) => (
                   <tr key={roleData.email} className="border-t">
                     <td className="py-2 flex items-center">
-                      <img src={roleData.profilePic} alt="Profile" className="w-10 h-10 rounded-full mr-4" />
+                      <img src={roleData.profilePic || profile} alt="Profile" className="w-10 h-10 rounded-full mr-4" />
                       <div>
                         <div className="font-bold">{roleData.firstName}</div> {/* Display first name in bold */}
                         <div>{roleData.email}</div> {/* Display email below */}

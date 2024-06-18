@@ -2,14 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../Components/Navbar';
-import EditRoles from './EditRoles'; // Import the EditRole component
+import EditRoles from './EditRoles';
 import EditProfile from './EditProfile';
+import Overview from '../Components/Overview'; // Import the Overview component
 
 import profile from '../Resources/grey_dp.png'; // Import default profile picture
 
-
 const Profile = () => {
   const [profileData, setProfileData] = useState(null);
+  const [profilePic, setProfilePic] = useState(profile);
   const [showPopup, setShowPopup] = useState(false);
   const [activeTab, setActiveTab] = useState('Overview'); // State to manage active tab
 
@@ -28,8 +29,21 @@ const Profile = () => {
         });
 
         setProfileData(response.data);
-        console.log("Profile component mounted :", response.data );
+        console.log("Profile component mounted:", response.data);
 
+        // Fetch profile picture
+        const profilePicResponse = await axios.get('http://103.209.199.186:5000/auth/profile-photo', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'image/jpeg',
+          },
+          responseType: 'blob', // Ensure the response is a blob
+        });
+
+        if (profilePicResponse.status === 200) {
+          const imageUrl = URL.createObjectURL(profilePicResponse.data);
+          setProfilePic(imageUrl);
+        }
       } catch (error) {
         console.error('Error fetching profile data:', error);
       }
@@ -71,7 +85,7 @@ const Profile = () => {
           <div className="w-1/4 pr-8">
             <div className="flex-shrink-0 mb-4">
               <img 
-                src={profileData.profile_pic || profile} 
+                src={profilePic || profile} 
                 alt="Profile" 
                 className="rounded-full w-32 h-32 object-cover" 
               />
@@ -96,53 +110,26 @@ const Profile = () => {
                 )}
               </div>
             </div>
-            {activeTab === 'Overview' && (
-              <div>
-                <h2 className="text-2xl font-bold mb-4">Overview</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="bg-gray-100 p-4 rounded-lg">
-                    <div className="font-bold">12%</div>
-                    <div className="text-gray-600">of the profile is filled out</div>
-                  </div>
-                  <div className="bg-gray-100 p-4 rounded-lg">
-                    <div className="font-bold">0h</div>
-                    <div className="text-gray-600">reported time this month</div>
-                  </div>
-                  <div className="bg-gray-100 p-4 rounded-lg">
-                    <div className="font-bold text-center">One important thing...</div>
-                    <div className="text-gray-600 text-center">Arlene is waiting for the draft contract</div>
-                    <button className="mt-2 bg-blue-500 text-white py-2 px-4 rounded-lg block mx-auto">Create contract</button>
-                  </div>
-                </div>
-                <div className="mt-8">
-                  <div className="flex justify-between text-gray-600">
-                    <div>Status: <span className="font-semibold text-gray-700">Recruitment stage</span></div>
-                    <div>Created: <span className="font-semibold text-gray-700">February 24, 2023</span></div>
-                    <div>Last updated: <span className="font-semibold text-gray-700">February 24, 2023</span></div>
-                  </div>
-                </div>
-              </div>
-            )}
+            {activeTab === 'Overview' && <Overview role={profileData.role} />}
             {activeTab === 'Edit Profile' && (
               <div>
                 <h2 className="text-2xl font-bold mb-4">Edit Profile</h2>
-                    <EditProfile/>                {/* Add Edit Profile content here */}
+                <EditProfile /> {/* Add Edit Profile content here */}
               </div>
             )}
             {activeTab === 'Edit Roles' && (
-               <div>
-               <h2 className="text-2xl font-bold mb-4">Current Users</h2>
-               {profileData.role === 'Admin' ? (
-                 <EditRoles/>
-               ) : (
-                 <div className="mt-4 p-4 bg-red-100 text-red-700 rounded-md">
-                   No access. Please contact an admin for access.
-                 </div>
-               )}
-               {/* Add Edit Roles content here */}
-             </div>
-           )}
-            
+              <div>
+                <h2 className="text-2xl font-bold mb-4">Current Users</h2>
+                {profileData.role === 'Admin' ? (
+                  <EditRoles />
+                ) : (
+                  <div className="mt-4 p-4 bg-red-100 text-red-700 rounded-md">
+                    No access. Please contact an admin for access.
+                  </div>
+                )}
+                {/* Add Edit Roles content here */}
+              </div>
+            )}
           </div>
         </div>
       </div>

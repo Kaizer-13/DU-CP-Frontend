@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../Components/Navbar';
 import { refreshToken } from '../utils/auth';
+import { useNavigate } from 'react-router-dom';
 
 function CreateContests() {
   const [contestTitle, setContestTitle] = useState('');
@@ -15,6 +16,8 @@ function CreateContests() {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
+
 
   const fetchProblems = async (token) => {
     try {
@@ -131,6 +134,10 @@ function CreateContests() {
         setEndTime('');
         setContestPassword('');
         setAddedProblems([]);
+
+        setTimeout(() => {
+          navigate('/contests');
+        }, 3000);
       } else {
         setErrorMessage('Error creating contest. Please try again.');
       }
