@@ -36,8 +36,8 @@ const ExternalStandings = () => {
           tries: 0, // Keeping tries as 0 for now
           problems: Object.values(entry.status).map(status => {
             if (status === 1) return 'Accepted';
-            if (status === -1) return 'Wrong Answer';
-            return 'None';
+            if (status === 0) return 'None';
+            return 'Wrong Answer';
           })
         }));
 
