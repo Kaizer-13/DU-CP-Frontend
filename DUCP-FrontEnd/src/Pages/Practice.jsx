@@ -61,9 +61,9 @@ function Practice() {
             <Link to="/contests" className="underline text-gray-500 hover:text-dark-blue font-bold">
               Contests
             </Link>
-            <a href="#practice-problems" className="underline text-gray-500 hover:text-dark-blue font-bold">
-              Practice Problems
-            </a>
+            <Link to="/addProblem" className="underline text-gray-500 hover:text-dark-blue font-bold">
+              Add New Problem
+            </Link>
           </div>
         </div>
         <Table

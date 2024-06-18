@@ -25,6 +25,7 @@ import ForgotPassword from './Pages/ForgotPassword';
 import CheckContest from './Pages/CheckContest';
 import CreatePost from './Pages/CreatePost';
 import ProblemPage from './Pages/ProblemPage';
+import AddProblem from './Pages/AddProblem';
 function App() {
   return (
     <>
@@ -91,6 +92,8 @@ function App() {
             element={<Practice/>} 
 
         />
+        <Route path="/addProblem" element={<AddProblem/>} />
+
       <Route path="/contests/:contestId" element={<ContestPage/>}/>
       <Route path="/create-post" element={<CreatePost announcement={false}/>} />
       <Route path="/create-announcement" element={<CreatePost announcement={true}/>} />
@@ -101,6 +104,7 @@ function App() {
       <Route path = '/forgot-password' element ={<ForgotPassword/>}/>
       <Route path="/problem/:problemId" element={<ProblemPage/>} />
       <Route path="/contests/:contestId/problem/:problemId" element={<ContestPage/>} />
+
 
       </Routes>
     </Router>
