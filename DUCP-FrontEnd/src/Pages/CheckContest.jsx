@@ -48,11 +48,12 @@ function CheckContest() {
     };
 
     try {
+      const token = localStorage.getItem('access_token');
       const response = await fetch('http://103.209.199.186:5000/admin/external_contest_data', {
         method: 'POST',
         headers: {
           'accept': 'application/json',
-          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1bUpaZlNlQV85SiIsImVtYWlsIjoidGFzbmltYmluYW53YXIyNjA1QGdtYWlsLmNvbSIsInJvbGUiOiJBZG1pbiIsImV4cCI6MTcxODczNjg5N30.A1uci9_xDQEmq4DIqOFqVCVj58J_8ya6VPvxIpuLY0A',
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(requestData),
