@@ -56,7 +56,7 @@ const CreatePostComponent = ({ announcement }) => {
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Failed to submit post');
-        toast.error(errorData.message || 'Failed to submit post');
+        toast.error(errorData.message || 'Unauthorized Access');
       }
     } catch (error) {
       setError('An error occurred while submitting the post');

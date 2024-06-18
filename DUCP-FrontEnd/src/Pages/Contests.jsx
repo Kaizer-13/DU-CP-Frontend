@@ -56,7 +56,7 @@ function Contests() {
             placeholder="Search contests..."
             value={searchQuery}
             onChange={handleSearchChange}
-            className="p-2 w-3/4 border border-gray-300 rounded"
+            className="p-2 w-3/5 border border-gray-300 rounded"
           />
           <div className="flex space-x-8">
             <Link to="/createContests" className="underline text-gray-500 hover:text-dark-blue font-bold">

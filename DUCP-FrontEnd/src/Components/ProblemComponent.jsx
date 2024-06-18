@@ -4,7 +4,8 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const ProblemComponent = ({ problemId, problemUrl, timestamps }) => {
+const ProblemComponent = ({ problemId, contestId, isContest, problemUrl, timestamps }) => {
+
   const [pdfContent, setPdfContent] = useState(null);
   const [error, setError] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -60,8 +61,10 @@ const ProblemComponent = ({ problemId, problemUrl, timestamps }) => {
       formData.append('file', selectedFile);
 
       // Upload the file
+      const uploadUrl = (isContest)? `http://103.209.199.186:5000/contestant/upload_file?problem_id=${problemId}&contest_id=${contestId}`:`http://103.209.199.186:5000/contestant/upload_file?problem_id=${problemId}`;
+
       const uploadResponse = await axios.post(
-        `http://103.209.199.186:5000/contestant/upload_file?problem_id=${problemId}`,
+        uploadUrl,
         formData,
         {
           headers: {
@@ -80,10 +83,10 @@ const ProblemComponent = ({ problemId, problemUrl, timestamps }) => {
       const encodedProblemUrl = encodeURIComponent(problemUrl);
 
       // Submit the file
+      // const token = localStorage.getItem('access_token')
       const submitUrl = `http://103.209.199.186:5000/contestant/submit/${problemId}?file_path=${encodedFilePath}&problem_url=${encodedProblemUrl}`;
-      const submitResponse = await axios.post(
+      const submitResponse = await axios.get(
         submitUrl,
-        {},
         {
           headers: {
             'Authorization': `Bearer ${token}`,

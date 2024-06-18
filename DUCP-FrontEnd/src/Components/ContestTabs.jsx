@@ -247,7 +247,7 @@ const ContestTabs = ({ contestData }) => {
         {activeTab === 'problem' && (
           <div>
             {selectedProblemId && (
-              <ProblemComponent problemId={selectedProblemId} problemUrl={selectedProblemUrl} timestamps={timestamps} />
+              <ProblemComponent problemId={selectedProblemId} contestId ={contestId} isContest= {true} problemUrl={selectedProblemUrl} timestamps={timestamps} />
             )}
           </div>
         )}
