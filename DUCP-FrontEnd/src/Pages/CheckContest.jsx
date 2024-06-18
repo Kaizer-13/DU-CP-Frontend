@@ -72,7 +72,7 @@ function CheckContest() {
   }
 
   const getUserInfo = (userId) => {
-    return userInfo[userId] || {};
+    return userInfo.find(user => user.id === parseInt(userId)) || {};
   };
 
   const getPlatformId = (user) => {
