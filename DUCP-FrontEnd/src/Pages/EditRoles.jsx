@@ -1,24 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import Navbar from '../Components/Navbar';
+import axios from 'axios';
 
-const EditRole = () => {
+const EditRoles = () => {
   const [rolesData, setRolesData] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
   const [selectedRole, setSelectedRole] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [search, setSearch] = useState(''); // Search state
 
   useEffect(() => {
-    console.log("EditRole component mounted");
-    // Simulate an API call to fetch roles data
-    const fetchRolesData = () => {
-      const mockData = [
-        { username: 'Bithi01', role: 'Admin' },
-        { username: 'Kaiser01', role: 'User' },
-        { username: 'Tasnim', role: 'Moderator' },
-        { username: 'Sinha', role: 'User' },
-        { username: 'Bhola', role: 'User' },
-      ];
-      setRolesData(mockData);
+    const fetchRolesData = async () => {
+      try {
+        const accessToken = localStorage.getItem('access_token');
+        const response = await axios.post(
+          'http://103.209.199.186:5000/admin/all-user-info',
+          {},
+          { headers: { Authorization: `Bearer ${accessToken}` } }
+        );
+
+        if (response.status === 200) {
+          const users = response.data.map(user => ({
+            username: user.username,
+            email: user.email,
+            firstName: user.first_name, // Added first name
+            role: user.role,
+            dateAdded: user.dateAdded,
+            lastActive: user.lastActive,
+            profilePic: user.profilePic
+          }));
+          setRolesData(users);
+        }
+      } catch (error) {
+        console.error('Error fetching roles data:', error);
+      }
     };
 
     fetchRolesData();
@@ -29,84 +43,133 @@ const EditRole = () => {
     setSelectedRole(rolesData[index].role);
   };
 
-  const handleSaveClick = () => {
-    const updatedRolesData = rolesData.map((roleData, index) => {
-      if (index === editIndex) {
-        return { ...roleData, role: selectedRole };
+  const handleSaveClick = async () => {
+    try {
+      const accessToken = localStorage.getItem('access_token');
+      const response = await axios.post(
+        'http://103.209.199.186:5000/admin/assign-role',
+        { email: rolesData[editIndex].email, role: selectedRole },
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+
+      if (response.status === 200) {
+        const updatedRolesData = rolesData.map((roleData, index) => {
+          if (index === editIndex) {
+            return { ...roleData, role: selectedRole };
+          }
+          return roleData;
+        });
+        setRolesData(updatedRolesData);
+        setEditIndex(null);
+        setSuccessMessage('Role updated successfully');
+        setTimeout(() => setSuccessMessage(''), 3000);
       }
-      return roleData;
-    });
-    setRolesData(updatedRolesData);
-    setEditIndex(null);
+    } catch (error) {
+      console.error('Error updating role:', error);
+    }
   };
 
   const handleCancelClick = () => {
     setEditIndex(null);
   };
 
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value);
+  };
+
+  const filteredRolesData = rolesData.filter(roleData =>
+    roleData.firstName.toLowerCase().includes(search.toLowerCase()) ||
+    roleData.role.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div className="min-h-screen flex flex-col">
-      <div className="w-full">
-        <Navbar />
-      </div>
       <div className="flex-grow p-8">
-        <div className="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6">
-          <div className="mb-4 flex justify-between">
-            <Link to="/profile" className="text-blue-500 hover:underline">Overview</Link>
-            <span className="text-2xl font-bold text-gray-700">Edit Role</span>
+        
+        <div className="max-w-6xl mx-auto bg-white rounded-lg p-6">
+
+          <div className="mb-4">
+            <input
+              type="text"
+              placeholder="Search by first name or role"
+              value={search}
+              onChange={handleSearchChange}
+              className="w-full border border-gray-300 rounded-md px-4 py-2"
+            />
           </div>
-          <div className="flex flex-col space-y-4">
-            {rolesData.map((roleData, index) => (
-              <div
-                key={roleData.username}
-                className="flex justify-between p-2 rounded-md"
-                style={{ backgroundColor: index % 2 === 0 ? '#e0e0e0' : 'white' }}
-              >
-                <span className="font-semibold text-gray-700">{roleData.username}:</span>
-                {editIndex === index ? (
-                  <>
-                    <select
-                      value={selectedRole}
-                      onChange={(e) => setSelectedRole(e.target.value)}
-                      className="border border-gray-300 rounded-md px-2 py-1"
-                    >
-                      <option value="Admin">Admin</option>
-                      <option value="Moderator">Moderator</option>
-                      <option value="User">User</option>
-                    </select>
-                    <div>
-                      <button
-                        onClick={handleSaveClick}
-                        className="text-green-500 hover:underline mx-2"
-                      >
-                        Save Changes
-                      </button>
-                      <button
-                        onClick={handleCancelClick}
-                        className="text-red-500 hover:underline mx-2"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <span>{roleData.role}</span>
-                    <button
-                      onClick={() => handleEditClick(index)}
-                      className="text-blue-500 hover:underline"
-                    >
-                      Edit
-                    </button>
-                  </>
-                )}
-              </div>
-            ))}
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white">
+              <thead>
+                <tr>
+                  <th className="py-2">Name</th>
+                  <th className="py-2">Role</th>
+                  <th className="py-2">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredRolesData.map((roleData, index) => (
+                  <tr key={roleData.email} className="border-t">
+                    <td className="py-2 flex items-center">
+                      <img src={roleData.profilePic} alt="Profile" className="w-10 h-10 rounded-full mr-4" />
+                      <div>
+                        <div className="font-bold">{roleData.firstName}</div> {/* Display first name in bold */}
+                        <div>{roleData.email}</div> {/* Display email below */}
+                      </div>
+                    </td>
+                    <td className="py-2">
+                      {editIndex === index ? (
+                        <select
+                          value={selectedRole}
+                          onChange={(e) => setSelectedRole(e.target.value)}
+                          className="border border-gray-300 rounded-md px-2 py-1"
+                        >
+                          <option value="Admin">Admin</option>
+                          <option value="Moderator">Moderator</option>
+                          <option value="User">No Role</option>
+                        </select>
+                      ) : (
+                        roleData.role
+                      )}
+                    </td>
+                    <td className="py-2">
+                      {editIndex === index ? (
+                        <>
+                          <button
+                            onClick={handleSaveClick}
+                            className="text-green-500 hover:underline mx-2"
+                          >
+                            Save
+                          </button>
+                          <button
+                            onClick={handleCancelClick}
+                            className="text-red-500 hover:underline mx-2"
+                          >
+                            Cancel
+                          </button>
+                        </>
+                      ) : (
+                        <button
+                          onClick={() => handleEditClick(index)}
+                          className="text-blue-500 hover:underline"
+                        >
+                          Edit
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
+          {successMessage && (
+            <div className="mt-4 p-2 bg-green-100 text-green-700 rounded-md">
+              {successMessage}
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 };
 
-export default EditRole;
+export default EditRoles;

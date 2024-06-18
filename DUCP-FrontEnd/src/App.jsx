@@ -15,6 +15,11 @@ import Leaderboard from './Pages/Leaderboard';
 import Contests from './Pages/Contests';
 import SignUp from './Pages/SignUp';
 import ContestPage from './Pages/ContestPage';
+import CreateContests from './Pages/CreateContests';
+import Profile from './Pages/Profile'
+import EditRole from './Pages/EditRoles';
+import EditProfile from './Pages/EditProfile';
+import Practice from './Pages/Practice';
 
 function App() {
   return (
@@ -50,6 +55,36 @@ function App() {
         <Route
             path="/contests" 
             element={<Contests/>} 
+
+        />
+
+        <Route
+            path="/createContests" 
+            element={<CreateContests/>} 
+
+        />
+
+        <Route
+            path="/profile" 
+            element={<Profile/>} 
+
+        />
+
+        <Route
+            path="/edit-profile" 
+            element={<EditProfile/>} 
+
+        />
+
+        <Route
+            path="/edit-role" 
+            element={<EditRole/>} 
+
+        />
+
+        <Route
+            path="/practice" 
+            element={<Practice/>} 
 
         />
       <Route path="/contests/:contestId" element={<ContestPage/>}/>
